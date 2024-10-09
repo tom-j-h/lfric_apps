@@ -191,7 +191,7 @@ module update_iau_inc_alg_mod
     call m_g % copy_field_properties( mg_earlier )
     call theta % copy_field_properties( exner_wth )
 
-    ! Save initial theta, exner on theta levels and humidities, and 
+    ! Save initial theta, exner on theta levels and humidities, and
     ! calculate initial temperature, for use later
     call invoke ( setval_X( theta_earlier, theta ),                  &
                   setval_X( mv_earlier, m_v ),                       &

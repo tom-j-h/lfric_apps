@@ -85,7 +85,7 @@ module process_send_fields_2d_mod
 
     character(str_def)                           :: fld_name
 
-    ! Number of accumulation steps 
+    ! Number of accumulation steps
     real(r_def), pointer                         :: acc_step
     ! Reciprocal of number of accumulated time steps
     real(r_def)                                  :: r_acc_step
@@ -100,7 +100,7 @@ module process_send_fields_2d_mod
     call depository%get_field("r_sea_ice_frac_raw", r_sea_ice_frac_raw)
 
     ! Calculate the reciprocal of acc_step
-    call modeldb%values%get_value( 'accumulation_steps', acc_step ) 
+    call modeldb%values%get_value( 'accumulation_steps', acc_step )
     r_acc_step = 1.0_r_def/acc_step
 
     ! We need to detect if this is the first step after a start/restart.

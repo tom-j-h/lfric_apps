@@ -214,7 +214,7 @@ contains
 
     ! Get pointer to clock to use downstream
     model_clock => modeldb%clock
-  
+
     ! Get pointers to field collections for use downstream
     prognostic_fields => modeldb%fields%get_field_collection("prognostic_fields")
 
@@ -228,7 +228,7 @@ contains
     moisture_fields => modeldb%fields%get_field_collection("moisture_fields")
     call moisture_fields%get_field("mr", mr_array)
     mr => mr_array%bundle
-    
+
     ! Run the initialisation process
     call run_init(self, u, rho, theta, exner, mr, prognostic_fields, moisture_fields, model_clock )
 
@@ -400,11 +400,11 @@ contains
 
     ! Reference fields
     type( field_type ),       pointer :: rho_ref, theta_ref, exner_ref
-    
+
     ! Reference moist dynamics factors
     type( field_array_type ),      pointer :: moist_dyn_ref_array
     type( field_type ),            pointer :: moist_dyn_ref(:)
-    
+
 
     ! Timestep
     real(kind=r_def) :: cast_dt
@@ -489,9 +489,9 @@ contains
     ! Operators for si solves
     !--------------------------------------------------------------------
     call create_si_operators( mesh )
-    
+
     ! If using checkpointed reference state, then calculate semi-implicit
-    ! operators using the checkpointed reference state 
+    ! operators using the checkpointed reference state
     cast_dt = real(model_clock%get_seconds_per_step(), r_def)
     reference_reset_freq = int(reference_reset_time / cast_dt, i_def)
     if (mod(model_clock%get_first_step()-1, reference_reset_freq) /= 0) then
@@ -617,7 +617,7 @@ contains
     type( field_type ),       pointer :: exner_ref
     type( field_type ),       pointer :: moist_dyn_ref(:)
     type( field_array_type ), pointer :: moist_dyn_ref_array
-    
+
 
     real(kind=r_def) :: cast_dt
 
@@ -665,7 +665,7 @@ contains
                  setval_X(self%state(igh_t), theta), &
                  setval_X(self%state(igh_d), rho  ), &
                  setval_X(self%state(igh_p), exner) )
-    
+
     !--------------------------------------------------------------------
     ! Compute the semi-implicit operators
     !--------------------------------------------------------------------
@@ -676,11 +676,11 @@ contains
     reference_reset_freq = int(reference_reset_time / cast_dt, i_def)
     checkpoint_reference_fields =  mod(model_clock%get_first_step()-1, reference_reset_freq) /= 0 .or.  &
                                       mod(model_clock%get_last_step(),    reference_reset_freq) /= 0
-  
+
     if ( mod(model_clock%get_step() - 1_i_def, reference_reset_freq) == 0_i_def ) then
       ! Compute semi-implicit operators with current model state
       call compute_si_operators(self%state(igh_t), self%state(igh_d), self%state(igh_p), cast_dt, moist_dyn)
-      
+
       ! Copy over model state for checkpointing if required
       if (checkpoint_reference_fields) then
         call prognostic_fields%get_field('theta_ref', theta_ref)

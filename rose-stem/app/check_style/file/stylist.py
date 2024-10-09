@@ -19,6 +19,7 @@ from stylist.fortran import (
     FortranCharacterset,
     MissingImplicit,
     NakedLiteral,
+    MissingOnly,
     IntrinsicModule,
     ForbidUsage
 )
@@ -45,11 +46,18 @@ allowed_mpi = (
     "log_mod"
 )
 
+# We limit the modules that can be used without "only"
+allowed_use_no_only = (
+    "mpi",
+    "pfunit_mod"
+)
+
 infrastructure = Style(
     TrailingWhitespace(),
     FortranCharacterset(),
     MissingImplicit(),
     NakedLiteral(integers=False, reals=True),
+    MissingOnly(ignore=allowed_use_no_only),
     IntrinsicModule(),
     ForbidUsage('mpi', exceptions=allowed_mpi)
 )
@@ -57,3 +65,5 @@ infrastructure = Style(
 # Define additional file type processing pipelines
 #
 pf = FilePipe(FortranSource, PFUnitProcessor, FortranPreProcessor)
+X90 = FilePipe(FortranSource, FortranPreProcessor)
+x90 = FilePipe(FortranSource)

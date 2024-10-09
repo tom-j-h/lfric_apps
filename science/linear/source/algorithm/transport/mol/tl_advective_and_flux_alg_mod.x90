@@ -138,7 +138,7 @@ contains
             ! To properly initialise mass_flux_2, we need to call kernel twice -
             ! once with the usual ls_wind to determine direction, another with the
             ! reversed direction. We initialise mass_flux_2 with the average of the
-            ! upwind and downwind reconstructions, so that the result tends to this value 
+            ! upwind and downwind reconstructions, so that the result tends to this value
             ! as ls_wind tends to zero.
             call reversed_ls_wind%initialise( ls_wind%get_function_space() )
             call invoke( setval_c(mass_flux_1, 0.0_r_def),                                        &

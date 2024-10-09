@@ -529,7 +529,7 @@ subroutine create_model_data( modeldb,      &
     call moisture_fields%get_field("mr", mr_array)
     call moisture_fields%get_field("moist_dyn", moist_dyn_array)
 
-    ! Ideally, setting IO behaviour should be part of the initialisation 
+    ! Ideally, setting IO behaviour should be part of the initialisation
     ! like with the fields but currently there is no support for this so they are placed here
     io_op_ptr => checkpoint_read_value
     call temp_corr_io_value%set_checkpoint_read_behaviour(io_op_ptr)

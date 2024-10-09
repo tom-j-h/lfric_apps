@@ -85,18 +85,18 @@ contains
     real(kind=r_def)  :: global_evap_rate   ! Rate of lake evaporation over the whole globe (kg s-1)
     real(kind=r_def)  :: global_evap_total  ! Total lake evaporation over the whole globe over the whole timestep (kg)
     real(kind=r_def)  :: moist_area         ! Total area where soil is moist enough for moisture to be removed (m2)
-    real(kind=r_def)  :: min_soil_moisture  ! Global minimum value of soil mosture 
+    real(kind=r_def)  :: min_soil_moisture  ! Global minimum value of soil mosture
     ! real(kind=r_def)  :: max_soil_moisture  ! Global maximum value of soil mosture
     real(kind=r_def)  :: water_reduction    ! Amount of water (kg m-2) to reduce the soil moisture by
 
     ! Parameters
-    real(kind=r_def), parameter  :: tiny = 1.0e-20
+    real(kind=r_def), parameter  :: tiny = 1.0e-20_r_def
 
     ! Logicals
     logical(kind=l_def)  :: soilm_change_lakes_flag  ! Is the soilm_change_lakes requested
 
     ! Initialise local fields
-    call lake_evap%copy_field_properties(land_area)  
+    call lake_evap%copy_field_properties(land_area)
     call lake_evap%copy_field_properties(evap_whole_grid_cell)
     call lake_evap%copy_field_properties(land_fraction)
     call lake_evap%copy_field_properties(moist_mask)
@@ -114,7 +114,7 @@ contains
 
     ! Calculate the grid cell areas (cell_area)
     cell_area => get_dA_msl_proj( mesh%get_id() )
-                  
+
     ! Multiply by the grid box areas
     call invoke(X_times_Y(evap_whole_grid_cell,lake_evap, cell_area),  &
 
@@ -168,7 +168,7 @@ contains
     if ( check_soilm_negatives ) then
       soil_moisture_proxy = soil_moisture%get_proxy()
       min_soil_moisture = soil_moisture_proxy%get_min()
-      if ( min_soil_moisture < -1.0*tiny ) then
+      if ( min_soil_moisture < -1.0_r_def*tiny ) then
         write( log_scratch_space, '(A,E16.8)') &
                               'soil_moisture has gone negative with a value of ',  &
                                min_soil_moisture
@@ -177,7 +177,7 @@ contains
 
       unfrozen_soil_moisture_proxy = unfrozen_soil_moisture%get_proxy()
       min_soil_moisture = unfrozen_soil_moisture_proxy%get_min()
-      if ( min_soil_moisture < -1.0*tiny ) then
+      if ( min_soil_moisture < -1.0_r_def*tiny ) then
         write( log_scratch_space, '(A,E16.8)') &
                      'unfrozen_soil_moisture has gone negative with a value of ',  &
                                min_soil_moisture

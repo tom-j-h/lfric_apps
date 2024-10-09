@@ -13,7 +13,7 @@ import sys
 import os
 import subprocess
 import argparse
-
+from stylist import __main__
 
 def launch_stylist(app_path, config_path):
     """

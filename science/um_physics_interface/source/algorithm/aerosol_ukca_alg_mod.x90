@@ -664,6 +664,7 @@ contains
     height_w3 => get_height( W3, mesh%get_id() )
     rdz_w3    => get_rdz_w3( mesh%get_id() )
 
+
     ! Get detj on shifted W3 grid (to use as grid_volume)
     shifted_mesh => mesh_collection%get_mesh(mesh, SHIFTED)
     detj_shifted => get_detj_at_w3_r_def(shifted_mesh%get_id())

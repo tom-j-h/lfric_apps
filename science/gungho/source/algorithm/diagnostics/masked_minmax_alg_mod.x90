@@ -43,7 +43,7 @@ subroutine log_field_masked_minmax( log_lev, label, field, mask )
   real(r_def)                    :: fmin, fmax
 
   if ( log_lev < log_level() ) return
-  
+
   call get_masked_minmax( field, mask, fmin, fmax )
 
   write( log_scratch_space, '( A, 2E16.8 )' ) &
@@ -127,7 +127,7 @@ subroutine get_masked_minmax( field, mask, masked_fmin, masked_fmax )
   ! Set the values in region B to be the min and calculate max over whole field
 
   call invoke ( &
-       ! fmin * inverse_mask: 0 in region A, fmin in region B 
+       ! fmin * inverse_mask: 0 in region A, fmin in region B
        a_times_X( scaled_mask_fmin, fmin, inverse_mask ), &
 
        ! Add fmin so that masked_field_fmin is fmin in region B
@@ -142,7 +142,7 @@ subroutine get_masked_minmax( field, mask, masked_fmin, masked_fmax )
   ! Set the values in B to be the max and calculate min over whole field
 
   call invoke ( &
-       ! fmax * inverse_mask: 0 in region A, fmax in region B 
+       ! fmax * inverse_mask: 0 in region A, fmax in region B
        a_times_X( scaled_mask_fmax, fmax, inverse_mask ), &
 
        ! Add fmax so that masked_field_fmax is fmax in region B

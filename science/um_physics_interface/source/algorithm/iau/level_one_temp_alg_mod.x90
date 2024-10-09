@@ -6,7 +6,7 @@
 
 !> @brief Apply level1 temperature increments to land surface temperature flds
 !> @details Increments to level 1 temperature, resulting from the IAU, are
-!>          applied to soil temperature, snow temperature and skin temperature, 
+!>          applied to soil temperature, snow temperature and skin temperature,
 !>          dependent on certain conditions.
 
 module level_one_temp_alg_mod
@@ -50,7 +50,7 @@ module level_one_temp_alg_mod
     type( field_collection_type ), intent(inout)    :: soil_fields
     type( field_collection_type ), intent(inout)    :: snow_fields
 
- 
+
     ! prognostic fields needed
     type( field_type ), pointer :: soil_temperature
     type( field_type ), pointer :: snow_layer_temp
@@ -65,7 +65,7 @@ module level_one_temp_alg_mod
 
     ! Get fields needed
     call soil_fields % get_field( 'soil_temperature', soil_temperature )
-    call snow_fields % get_field( 'snow_layer_temp', snow_layer_temp )           
+    call snow_fields % get_field( 'snow_layer_temp', snow_layer_temp )
     call surface_fields % get_field( 'tile_temperature', tile_temperature )
     call snow_fields % get_field( 'snow_depth', snow_depth )
     call snow_fields % get_field( 'n_snow_layers', n_snow_layers )
