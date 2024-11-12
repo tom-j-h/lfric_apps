@@ -107,16 +107,10 @@
     {# Include the default task values for un-populated fields #}
     {% include "templates/default_task_definitions.cylc" %}
 
-    {% if task.startswith("build") %}
-        {% set defined_task_name = "build" %}
-    {% elif task.startswith("fcm_make") %}
-        {% set defined_task_name = "fcm_make" %}
-    {% else %}
-        {% set defined_task_name = "run" %}
+    {% set defined_task_name = generated_task_name %}
+    {% if not task.startswith("build") and not task.startswith("fcm_make") %}
+        {% set defined_task_name = "run_"~defined_task_name %}
     {% endif %}
-
-    {% set defined_task_name = defined_task_name~"_"~
-                               generated_task_name %}
 
     {% do requested_tasks.update({defined_task_name: task_dict}) %}
 

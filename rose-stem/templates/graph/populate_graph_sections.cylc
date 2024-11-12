@@ -171,7 +171,7 @@
 {% endif %}
 
 {# If running the nrun task, define application, plot, check and phystest #}
-{% if running_nrun %}
+{% if running_nrun and task.startswith("run") %}
     {% if application_run_task %}
         {% do graph_sections.append([
             application_build_task,

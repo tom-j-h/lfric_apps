@@ -203,7 +203,7 @@
     "lfric_atm_c896": [
         "lfric_atm_nwp_gal9-C896_MG_xc40_intel_production-64bit-rbl32",
     ],
-    "lfric_atm_exoplanets": [
+    "lfric_atm_xc40_exoplanets": [
         "lfric_atm_camembert_case3_gj1214b-C12_xc40_intel_production-64bit-rbl32",
         "lfric_atm_thai_ben1-C48_MG_xc40_intel_production-64bit-rbl32",
         "lfric_atm_thai_ben2-C48_MG_xc40_intel_production-64bit-rbl32",

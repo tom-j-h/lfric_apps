@@ -21,7 +21,7 @@
 {% elif task.startswith("build") %}
 
     {% do task_dict.update({
-        "placeholder": true,
+        "wallclock": 30,
     }) %}
 
 {% endif %}

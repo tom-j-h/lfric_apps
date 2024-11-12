@@ -105,7 +105,7 @@
         [[[environment]]]
             SOURCE_ROOT    = $CYLC_WORKFLOW_SHARE_DIR/source
             OUTPUT_ROOT    = $CYLC_WORKFLOW_SHARE_DIR/output
-            LAUNCH_SCRIPT  = $SOURCE_ROOT/apps/rose-stem/site/{{SITE}}/common/bin
+            LAUNCH_SCRIPT  = $CYLC_WORKFLOW_RUN_DIR/site/{{SITE}}/common/bin
             INFRASTRUCTURE_ROSESTEM = $SOURCE_ROOT/core/infrastructure/rose-stem/
 
         [[[events]]]

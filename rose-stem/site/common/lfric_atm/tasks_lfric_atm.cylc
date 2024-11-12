@@ -23,14 +23,6 @@
         "plot_str": "plot_map.py $NODAL_DATA_DIR/lfric_gal_diagnostics.nc  $PLOT_DIR",
     }) %}
 
-    {% if "production" in task_ns.extras %}
-
-        {% do task_dict.update({
-            "kgo_checks": [],
-        }) %}
-
-    {% endif %}
-
 {% elif task_ns.conf_name == "nwp_gal9-C48_MG" %}
 
     {% do task_dict.update({
@@ -783,6 +775,16 @@
 
     {% do task_dict.update({
         "placeholder": true,
+    }) %}
+
+{% endif %}
+
+{% if "production" in task_ns.extras %}
+
+    {# We turn off kgo checking for production tasks as the kgo is too variable #}
+
+    {% do task_dict.update({
+        "kgo_checks": [],
     }) %}
 
 {% endif %}

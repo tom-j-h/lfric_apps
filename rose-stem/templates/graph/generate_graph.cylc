@@ -76,11 +76,12 @@
 {# Loop over all tasks and check if we're running #}
 {# a kgo check task, any scintelapi task and a script #}
 {# These bits of info are needed later #}
+{# For kgo tests, ignore -v- tasks, eg. nrun-v-crun #}
 {% set running_kgo = namespace(bool=false) %}
 {% set running_gen_weights = namespace(bool=false) %}
 {% set running_scripts = namespace(bool=false) %}
 {% for t in tasks_to_run %}
-    {% if t.startswith("check") %}
+    {% if t.startswith("check") and "-v-" not in t %}
         {% set running_kgo.bool = true %}
     {% endif %}
     {% if "um2lfric" in t or "lfric2um" in t %}
