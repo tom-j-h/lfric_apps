@@ -188,7 +188,6 @@ class vn20_t339(MacroUpgrade):
             config, ["namelist:idealised", "perturb_magnitude"], "0"
         )
         self.add_setting(config, ["namelist:idealised", "perturb_seed"], "0")
-
         return config, self.reports
 
 
@@ -203,7 +202,6 @@ class vn20_t541(MacroUpgrade):
         self.add_setting(
             config, ["namelist:radiation", "cloud_entrapment"], "'zero'"
         )
-
         return config, self.reports
 
 
@@ -233,7 +231,6 @@ class vn20_t481(MacroUpgrade):
         self.add_setting(config, [nml, "max_sigmas"], "3.0")
         self.add_setting(config, [nml, "min_sigx_ft"], "0.0")
         self.add_setting(config, [nml, "turb_var_fac_bm"], "1.0")
-
         return config, self.reports
 
 
@@ -246,7 +243,6 @@ class vn20_t334(MacroUpgrade):
     def upgrade(self, config, meta_config=None):
         # Commands From: science/um_physics_interface/rose-meta/um-microphysics
         self.add_setting(config, ["namelist:microphysics", "mp_dz_scal"], "2.0")
-
         # Commands From: science/um_physics_interface/rose-meta/um-convection
         self.add_setting(config, ["namelist:convection", "efrac"], "1.0")
         self.add_setting(
@@ -254,7 +250,6 @@ class vn20_t334(MacroUpgrade):
         )
         self.add_setting(config, ["namelist:convection", "prog_ent_min"], "0.5")
         self.add_setting(config, ["namelist:convection", "qlmin"], "4.0e-4")
-
         # Commands From: science/um_physics_interface/rose-meta/um-cloud
         cvscheme = self.get_setting_value(
             config, ["namelist:convection", "cv_scheme"]
@@ -279,12 +274,29 @@ class vn20_t334(MacroUpgrade):
             self.add_setting(
                 config, ["namelist:cloud", "fsd_nonconv_const"], "1.14"
             )
-
         # Commands From: science/um_physics_interface/rose-meta/um-boundary_layer
         self.add_setting(config, ["namelist:blayer", "dec_thres_cu"], "0.05")
-
         # Commands From: science/um_physics_interface/rose-meta/um-aerosol
         self.add_setting(config, ["namelist:aerosol", "horiz_d"], "2.25")
         self.add_setting(config, ["namelist:aerosol", "us_am"], "1.45")
+        return config, self.reports
+
+
+class vn20_t249(MacroUpgrade):
+    """Upgrade macro for ticket #249 by Denis Sergeev."""
+
+    BEFORE_TAG = "vn2.0_t334"
+    AFTER_TAG = "vn2.0_t249"
+
+    def upgrade(self, config, meta_config=None):
+        # Commands From: science/jules_interface/rose-meta/jules-lfric
+        nml = "namelist:specified_surface"
+        self.add_setting(config, [nml, "surf_temp_forcing"], "'none'")
+        self.add_setting(config, [nml, "internal_flux_method"], "'uniform'")
+        self.add_setting(config, [nml, "internal_flux_value"], "0.0")
+
+        # Commands From: science/gungho/rose-meta/lfric-gungho
+        nml = "namelist:files"
+        self.add_setting(config, [nml, "internal_flux_ancil_path"], "''")
 
         return config, self.reports

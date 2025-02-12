@@ -11,4 +11,8 @@
     <field id="nh3" name="nh3" long_name="mass_fraction_of_ammonia_in_air" unit="kg kg-1" operation="once" grid_ref="full_level_face_grid" />
   </file>
 
+  <file id="int_flux_ancil" name="int_flux_ancil" mode="read" output_freq="1ts" convention="UGRID" cyclic="false" enabled=".FALSE.">
+    <field id="internal_flux" name="internal_flux" long_name="internal_flux" unit="W m-2" operation="once" domain_ref="face" />
+  </file>
+
 </file_definition>

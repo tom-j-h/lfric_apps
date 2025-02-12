@@ -39,19 +39,7 @@ use microphysics_config_mod, only: microphysics_casim
 use radiation_diags_mod,     only: initialise_diags_for_radiation, &
                                    output_diags_for_radiation
 use set_thermodynamic_kernel_mod, only: set_thermodynamic_kernel_type
-use radiative_gases_config_mod, only : &
-  ch4_rad_opt, ch4_rad_opt_ancil, ch4_rad_opt_prognostic, &
-  co_rad_opt, co_rad_opt_ancil, co_rad_opt_prognostic, &
-  co2_rad_opt, co2_rad_opt_ancil, co2_rad_opt_prognostic, &
-  h2_rad_opt, h2_rad_opt_ancil, h2_rad_opt_prognostic, &
-  h2o_rad_opt, h2o_rad_opt_ancil, h2o_rad_opt_prognostic, &
-  hcn_rad_opt, hcn_rad_opt_ancil, hcn_rad_opt_prognostic, &
-  he_rad_opt, he_rad_opt_ancil, he_rad_opt_prognostic, &
-  n2_rad_opt, n2_rad_opt_ancil, n2_rad_opt_prognostic, &
-  n2o_rad_opt, n2o_rad_opt_ancil, n2o_rad_opt_prognostic, &
-  nh3_rad_opt, nh3_rad_opt_ancil, nh3_rad_opt_prognostic, &
-  o2_rad_opt, o2_rad_opt_ancil, o2_rad_opt_prognostic, &
-  so2_rad_opt, so2_rad_opt_ancil, so2_rad_opt_prognostic
+use radiative_gases_config_mod,   only: h2o_rad_opt, h2o_rad_opt_ancil
 
 implicit none
 private

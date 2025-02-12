@@ -15,6 +15,9 @@ use mesh_mod,                      only: mesh_type
 use constants_mod,                 only: r_def, i_def
 use empty_data_mod,                only: empty_real_data
 use io_config_mod,                 only: subroutine_timers
+use log_mod,                       only: log_event, &
+                                         log_scratch_space, &
+                                         LOG_LEVEL_ERROR
 use timer_mod,                     only: timer
 use jules_control_init_mod,        only: n_surf_tile
 use sci_geometric_constants_mod,   only: get_dz_at_wtheta
@@ -281,6 +284,10 @@ subroutine rad_tile_alg(tile_sw_direct_albedo, tile_sw_diffuse_albedo,       &
                                         tile_temperature, &
                                         n_lw_band))
 
+  else
+    write( log_scratch_space, '(A)' ) &
+    'rad_tile_alg_mod: When JULES is not used, set l_planet_grey_surface=.true.'
+    call log_event( log_scratch_space, LOG_LEVEL_ERROR )
   end if
 
   if ( subroutine_timers ) call timer('rad_tile_alg')

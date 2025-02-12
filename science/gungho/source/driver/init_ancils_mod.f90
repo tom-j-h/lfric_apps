@@ -58,6 +58,10 @@ module init_ancils_mod
   use radiation_config_mod,           only : topography, topography_slope, &
                                              topography_horizon, &
                                              n_horiz_ang, n_horiz_layer
+  use specified_surface_config_mod,   only : internal_flux_method, &
+                                             internal_flux_method_non_uniform, &
+                                             surf_temp_forcing, &
+                                             surf_temp_forcing_int_flux
   use derived_config_mod,             only : l_esm_couple
   use chemistry_config_mod,           only : chem_scheme,                      &
                                              chem_scheme_strattrop,            &
@@ -925,6 +929,13 @@ contains
 
     ! Now the field collection is set up, the fields will be initialised in
     ! gungho_model_data_mod
+
+    ! Prescribed forcing of surface temperature e.g. via internal flux
+    if ( surf_temp_forcing == surf_temp_forcing_int_flux .and. &
+         internal_flux_method == internal_flux_method_non_uniform ) then
+      call setup_ancil_field("internal_flux", depository, ancil_fields, &
+        mesh, twod_mesh)
+    end if
 
   end subroutine create_fd_ancils_idealised
 

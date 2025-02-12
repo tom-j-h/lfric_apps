@@ -6,10 +6,12 @@
 {% do LOG.debug("Entered site/meto/suite_config.cylc") %}
 
     [[METO_ORIG]]
-        pre-script = "module load scitools"
 {% if site_vars["meto_xc40"] == "xcsc" %}
+        {# export-source task requires python 3.7 #}
+        pre-script = "module load scitools/production-os45-1"
         platform = {{site_vars["meto_xc40"]}}
 {% else %}
+        pre-script = "module load scitools"
         platform = {{ROSE_ORIG_HOST}}
 {% endif %}
 

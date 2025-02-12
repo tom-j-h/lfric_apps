@@ -90,7 +90,8 @@ module gungho_setup_io_mod
                                        lbc_directory,             &
                                        ls_filename,               &
                                        ls_directory,              &
-                                       coarse_ancil_directory
+                                       coarse_ancil_directory,    &
+                                       internal_flux_ancil_path
   use initialization_config_mod, only: init_option,               &
                                        init_option_fd_start_dump, &
                                        init_option_checkpoint_dump,&
@@ -128,6 +129,10 @@ module gungho_setup_io_mod
   use derived_config_mod,        only: l_esm_couple
 #ifdef UM_PHYSICS
   use jules_surface_config_mod,  only: l_vary_z0m_soil, l_urban2t
+  use specified_surface_config_mod, only: internal_flux_method, &
+                                       internal_flux_method_non_uniform, &
+                                       surf_temp_forcing, &
+                                       surf_temp_forcing_int_flux
   use surface_config_mod,        only: sea_alb_var_chl, albedo_obs
   use aerosol_config_mod,        only: glomap_mode,               &
                                        glomap_mode_climatology,   &
@@ -176,7 +181,6 @@ module gungho_setup_io_mod
                                        ls_fname
 #ifdef UM_PHYSICS
     character(len=str_max_filename) :: aerosol_ancil_directory
-    character(len=str_max_filename) :: orography_ancil_directory
     character(len=str_max_filename) :: ozone_ancil_directory
 #endif
     integer(i_def)                  :: ts_start, ts_end
@@ -708,6 +712,16 @@ module gungho_setup_io_mod
                                trim(gas_mmr_ancil_path)
       call files_list%insert_item( lfric_xios_file_type( ancil_fname, &
                                                          xios_id="gas_mmr_ancil", &
+                                                         io_mode=FILE_MODE_READ ) )
+    end if
+
+    ! Prescribed forcing of surface temperature e.g. via internal flux
+    if ( surf_temp_forcing == surf_temp_forcing_int_flux .and. &
+         internal_flux_method == internal_flux_method_non_uniform ) then
+      write(ancil_fname,'(A)') trim(ancil_directory)//'/'// &
+                               trim(internal_flux_ancil_path)
+      call files_list%insert_item( lfric_xios_file_type( ancil_fname, &
+                                                         xios_id="int_flux_ancil", &
                                                          io_mode=FILE_MODE_READ ) )
     end if
 #endif

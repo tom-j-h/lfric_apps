@@ -295,3 +295,23 @@ class vn20_t334(MacroUpgrade):
         self.add_setting(config, ["namelist:aerosol", "us_am"], "1.45")
 
         return config, self.reports
+
+
+class vn20_t249(MacroUpgrade):
+    """Upgrade macro for ticket #249 by Denis Sergeev."""
+
+    BEFORE_TAG = "vn2.0_t334"
+    AFTER_TAG = "vn2.0_t249"
+
+    def upgrade(self, config, meta_config=None):
+        # Commands From: science/jules_interface/rose-meta/jules-lfric
+        nml = "namelist:specified_surface"
+        self.add_setting(config, [nml, "surf_temp_forcing"], "'none'")
+        self.add_setting(config, [nml, "internal_flux_method"], "'uniform'")
+        self.add_setting(config, [nml, "internal_flux_value"], "0.0")
+
+        # Commands From: science/gungho/rose-meta/lfric-gungho
+        nml = "namelist:files"
+        self.add_setting(config, [nml, "internal_flux_ancil_path"], "''")
+
+        return config, self.reports

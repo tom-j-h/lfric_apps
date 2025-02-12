@@ -69,6 +69,8 @@ module create_physics_prognostics_mod
   use jules_surface_config_mod,       only : srf_ex_cnv_gust, l_vary_z0m_soil,  &
                                              l_urban2t
   use surface_config_mod,             only : albedo_obs, sea_alb_var_chl
+  use specified_surface_config_mod,   only : surf_temp_forcing, &
+                                             surf_temp_forcing_int_flux
   use spectral_gwd_config_mod,        only : add_cgw
   use microphysics_config_mod,        only : turb_gen_mixph
   use derived_config_mod,             only : l_esm_couple
@@ -872,6 +874,10 @@ contains
     call processor%apply(make_spec('urbalbrd', main%surface, W3, twod=.true.))
     call processor%apply(make_spec('urbemisw', main%surface, W3, twod=.true.))
     call processor%apply(make_spec('urbemisr', main%surface, W3, twod=.true.))
+    ! 2D field, need checkpointing if the internal flux scheme is used
+    call processor%apply(make_spec('internal_flux', main%surface, &
+        W3, twod=.true., &
+        ckp=(surf_temp_forcing == surf_temp_forcing_int_flux)))
 
     ! 2D fields, need checkpointing for urban-2-tile schemes
     call processor%apply(make_spec('urbwrr', main%surface, twod=.true., &

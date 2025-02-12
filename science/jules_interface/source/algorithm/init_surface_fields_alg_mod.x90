@@ -16,6 +16,11 @@ module init_surface_fields_alg_mod
 
   use initialization_config_mod, only: init_option, init_option_analytic, &
                                        ancil_option, ancil_option_none
+  use specified_surface_config_mod, only: internal_flux_method, &
+                                       internal_flux_method_uniform, &
+                                       internal_flux_value, &
+                                       surf_temp_forcing, &
+                                       surf_temp_forcing_int_flux
 
   implicit none
 
@@ -56,6 +61,7 @@ contains
     type( field_type ), pointer :: urbalbrd            => null()
     type( field_type ), pointer :: urbemisr            => null()
     type( field_type ), pointer :: urbemisw            => null()
+    type( field_type ), pointer :: internal_flux       => null()
 
     ! Diagnostic fields
     type( field_type ), pointer :: tau_ssi_w2          => null()
@@ -184,6 +190,16 @@ contains
                  setval_c(urbemisw,            0.875_r_def),                  &
                  setval_c(urbemisr,            0.95_r_def) )
 
+    end if
+
+    if ( surf_temp_forcing == surf_temp_forcing_int_flux ) then
+      call surface_fields%get_field('internal_flux', internal_flux)
+      if ( internal_flux_method == internal_flux_method_uniform ) then
+        call invoke( setval_c(internal_flux, internal_flux_value) )
+      else
+        ! Set to zero here and populated with values from ancil later
+        call invoke( setval_c(internal_flux, 0.0_r_def) )
+      end if
     end if
 
   end subroutine init_surface_fields_alg

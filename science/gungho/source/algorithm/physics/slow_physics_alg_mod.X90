@@ -43,7 +43,11 @@ module slow_physics_alg_mod
                                        convection_placement_slow,      &
                                        evap_condense_placement,        &
                                        evap_condense_placement_slow
-  use radiation_config_mod,      only: n_radstep, l_inc_radstep, n_inc_radstep
+  use radiation_config_mod,      only: n_radstep, l_inc_radstep, &
+                                       n_inc_radstep, &
+                                       l_planet_grey_surface
+  use specified_surface_config_mod, only: surf_temp_forcing, &
+                                       surf_temp_forcing_none
   use section_choice_config_mod, only: aerosol, aerosol_um,                  &
                                        boundary_layer, boundary_layer_um,    &
                                        electric, electric_um,                &
@@ -101,6 +105,7 @@ module slow_physics_alg_mod
   use radiation_alg_mod,         only: radiation_alg
   use cosp_alg_mod,              only: cosp_alg
   use cosp_diags_mod,            only: cosp_diags_this_tstep
+  use surf_temp_forcing_alg_mod, only: surf_temp_forcing_alg
   use pc2_rad_response_alg_mod,  only: pc2_rad_response_alg
   use spectral_gwd_alg_mod,      only: spectral_gwd_alg
   use orographic_drag_alg_mod,   only: orographic_drag_alg
@@ -752,6 +757,14 @@ contains
     if (methane_oxidation) then
       call methox_alg(dmv_methox, mr_n, clock)
       methox_done = .true.
+    end if
+
+    !---------------------------------------------------------------------
+    ! Surface temperature forcing
+    !---------------------------------------------------------------------
+    if ( l_planet_grey_surface .and. &
+         surf_temp_forcing /= surf_temp_forcing_none ) then
+      call surf_temp_forcing_alg(radiation_fields, surface_fields)
     end if
 
     !--------------------------------------------------------------------
