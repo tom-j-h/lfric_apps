@@ -54,6 +54,21 @@
     ],
     })  %}
 
+{# EX1A Groups #}
+{% do site_groups.update({
+    "ngarch_ex1a_developer": [
+        "ngarch_default-C24_ex1a_gnu_fast-debug-64bit",
+        "ngarch_default-C24_ex1a_gnu_full-debug-64bit",
+    ],
+    "ngarch_ex1a": [
+        "ngarch_ex1a_developer",
+    ],
+    "ngarch_ex1a_build": [
+        "build_ngarch_ex1a_gnu_fast-debug-64bit",
+        "build_ngarch_ex1a_gnu_full-debug-64bit",
+    ],
+    })  %}
+
 {# Platform Generic Groups #}
 {% if site_vars.launch_platform == "spice" %}
     {% do site_groups.update({
@@ -77,13 +92,16 @@
         "ngarch_developer": [
             "scripts",
             "ngarch_azspice_developer",
+            "ngarch_ex1a_developer",
         ],
         "ngarch": [
             "ngarch_developer",
             "ngarch_azspice",
+            "ngarch_ex1a",
         ],
         "ngarch_build": [
             "ngarch_azspice_build",
+            "ngarch_ex1a_build",
         ],
         }) %}
 {% endif %}
@@ -107,5 +125,10 @@
 {% do site_groups.xc40_developer.extend(site_groups.ngarch_xc40_developer) %}
 {% do site_groups.xc40.extend(site_groups.ngarch_xc40) %}
 {% do site_groups.xc40_build.extend(site_groups.ngarch_xc40_build) %}
+
+{# EX1A Extends #}
+{% do site_groups.ex1a_developer.extend(site_groups.ngarch_ex1a_developer) %}
+{% do site_groups.ex1a.extend(site_groups.ngarch_ex1a) %}
+{% do site_groups.ex1a_build.extend(site_groups.ngarch_ex1a_build) %}
 
 {% do LOG.debug("Finished in site/meto/groups/groups_ngarch.cylc") %}
