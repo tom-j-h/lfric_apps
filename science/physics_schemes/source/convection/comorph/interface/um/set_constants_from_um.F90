@@ -23,8 +23,6 @@ use nlsizes_namelist_mod, only: row_length, rows, bl_levels, tr_vars
 use cloud_inputs_mod, only: i_cld_vn
 use pc2_constants_mod, only: i_cld_pc2
 use ukca_option_mod, only: l_ukca, l_ukca_plume_scav
-use idealise_run_mod, only: l_shallow
-use horiz_grid_mod, only: cartesian_grid
 use model_domain_mod, only: model_type, mt_single_column
 use planet_constants_mod, only: g, r, rv, cp
 use water_constants_mod, only: tm, lc, lf,                                     &
@@ -131,11 +129,6 @@ l_cv_cloudfrac = ( i_cld_vn == i_cld_pc2 )
 ! The UM does not account for the effect of moisture on R/cp,
 ! so set switch to use approximation R/cp = R_dry/cp_dry
 l_approx_dry_adiabat = .true.
-
-! If the UM is running in spherical coordinates without the
-! shallow atmosphere approximation, set spherical coordinates
-! switch for conservation
-l_spherical_coord = .not. ( cartesian_grid .or. l_shallow )
 
 ! Set switch for scavenging of tracers by convective precip production;
 ! currently only implemented for UKCA aerosol and chemistry fields

@@ -29,33 +29,9 @@ implicit none
 ! Heights Arrays
 ! - eta values of theta levels
 real, allocatable, target  ::  eta_theta_levels(:)
-! - eta values of rho levels
-real, allocatable, target  ::  eta_rho_levels  (:)
-! - reference height of levels
-real, allocatable, target  ::  z_ref_theta(:)
-! - reference height of levels
-real, allocatable, target  ::  z_ref_rho(:)
 ! - height of theta levels
 real, allocatable, target  ::  r_theta_levels (:,:,:)
 ! - height of rho levels
 real, allocatable, target  ::  r_rho_levels   (:,:,:)
-
-real :: z_top_theta ! top of model as read in from dump header
-
-! Next two variables are targets for use in  multivariate swap_bounds
-real, allocatable, target ::  r_at_u (:,:,:)    ! height at u points on
-                                                ! rho levels
-real, allocatable, target ::  r_at_v (:,:,:)    ! height at v points on
-                                                ! rho levels
-
-real, allocatable, target :: r_at_u_w(:,:,:)  ! height at u points on rho levels
-real, allocatable, target :: r_at_v_w(:,:,:)  ! height at v points on rho levels
-
-! Heights of physics layer centres and boundaries above the centre of the planet
-real, save, allocatable :: r_layer_centres(:,:,:)
-real, save, allocatable :: r_layer_boundaries(:,:,:)
-
-! Depth of physics layers
-real, save, allocatable :: d_layer(:,:,:)
 
 end module level_heights_Mod

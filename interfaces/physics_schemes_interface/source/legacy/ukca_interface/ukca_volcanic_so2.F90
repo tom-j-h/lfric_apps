@@ -48,7 +48,6 @@ subroutine ukca_volcanic_so2                                                   &
 
 use model_domain_mod,     only: model_type, mt_global, mt_cyclic_lam,          &
                                 l_cartesian, l_regular
-use trignometric_mod,     only: true_latitude, true_longitude
 use cderived_mod,         only: delta_lambda, delta_phi
 use planet_constants_mod, only: planet_radius
 use conversions_mod,      only: pi_over_180, rsec_per_day, pi
@@ -119,6 +118,10 @@ real, allocatable, save :: wind_dir(:)
 real, allocatable, save :: u_theta_levels(:)
 real, allocatable, save :: v_theta_levels(:)
 real :: plume_height
+
+! Variables relating to true geographic location
+real, allocatable  ::  true_latitude (:,:)
+real, allocatable  ::  true_longitude (:,:)
 
 integer :: ukcavolc_unit
 character(len=filenamelength) :: filename

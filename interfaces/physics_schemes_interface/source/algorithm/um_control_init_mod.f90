@@ -30,7 +30,6 @@ contains
   subroutine um_control_init()
 
     ! UM modules containing things that need setting
-    use dynamics_input_mod, only: numcycles
     use gen_phys_inputs_mod, only: l_mr_physics, l_vol_interp_rho
     use model_domain_mod, only: model_type, mt_lfric
     use nlsizes_namelist_mod, only: model_levels, cloud_levels, n_cca_lev, &
@@ -55,11 +54,6 @@ contains
     ! Previous usage of mt_single_column has been removed to purge
     ! ambiguous use in UM codebase
     model_type = mt_lfric
-
-    ! Number of outer iterations of the dynamics - contained in UM
-    ! dynamics_input_mod.
-    ! Set from LFRic input number of outer iterations.
-    numcycles = outer_iterations
 
     ! Mixing ratio flag - contained in UM gen_phys_inputs.
     ! Set to true as LFRic only supports mixing ratios.

@@ -36,8 +36,6 @@ use mphys_inputs_mod,      only: l_mcr_qrain, l_mcr_qcf2, l_mcr_qgraup,        &
                                  l_mphys_nonshallow
 
 use gen_phys_inputs_mod,   only: l_mr_physics, l_vol_interp_rho
-use idealise_run_mod,      only: l_shallow
-use horiz_grid_mod,        only: cartesian_grid
 
 ! Dr Hook Modules
 use yomhook,               only: lhook, dr_hook
@@ -278,32 +276,29 @@ if ( l_mphys_nonshallow ) then
 
 !$OMP end PARALLEL
 
-  if ( .not. ( l_shallow .or. cartesian_grid ) ) then
-    ! If using spherical coordinates, include factor (r/r_surf)^2
-    ! in the layer mass, to account for the grid-columns getting
-    ! wider with height.  This means the precip rates are all
-    ! defined per unit area at Earth's surface, not per unit area at
-    ! the current level.
+  ! If using spherical coordinates, include factor (r/r_surf)^2
+  ! in the layer mass, to account for the grid-columns getting
+  ! wider with height.  This means the precip rates are all
+  ! defined per unit area at Earth's surface, not per unit area at
+  ! the current level.
 
 !$OMP PARALLEL do SCHEDULE(STATIC) DEFAULT(none)                               &
 !$OMP SHARED  ( tdims, r_theta_levels, rhodz_dry, rhodz_moist )                &
 !$OMP private ( i, j, k, r_sq_factor )
-    do k = 1, tdims%k_end
-      do j = tdims%j_start, tdims%j_end
-        do i = tdims%i_start, tdims%i_end
+  do k = 1, tdims%k_end
+    do j = tdims%j_start, tdims%j_end
+      do i = tdims%i_start, tdims%i_end
 
-          r_sq_factor = ( r_theta_levels(i,j,k) * r_theta_levels(i,j,k) )      &
-                      / ( r_theta_levels(i,j,0) * r_theta_levels(i,j,0) )
+        r_sq_factor = ( r_theta_levels(i,j,k) * r_theta_levels(i,j,k) )      &
+                    / ( r_theta_levels(i,j,0) * r_theta_levels(i,j,0) )
 
-          rhodz_dry(i,j,k)   = rhodz_dry(i,j,k)   * r_sq_factor
-          rhodz_moist(i,j,k) = rhodz_moist(i,j,k) * r_sq_factor
+        rhodz_dry(i,j,k)   = rhodz_dry(i,j,k)   * r_sq_factor
+        rhodz_moist(i,j,k) = rhodz_moist(i,j,k) * r_sq_factor
 
-        end do
       end do
     end do
+  end do
 !$OMP end PARALLEL do
-
-  end if  ! ( .not.( l_shallow .or. cartesian_grid ) )
 
 
 else  ! ( l_mphys_nonshallow )

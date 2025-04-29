@@ -35,22 +35,6 @@ implicit none
 ! Variables that are targets, are so as they are targets in
 ! multivariate swap_bounds.
 real, allocatable, target ::  cos_theta_latitude (:,:)
-real, allocatable, target ::  sec_theta_latitude (:,:)
-real, allocatable, target ::  FV_cos_theta_latitude (:,:)
-real, allocatable, target ::  FV_sec_theta_latitude (:,:)
-real, allocatable  ::  sin_theta_latitude (:,:)
-real, allocatable  ::  tan_theta_latitude (:,:)
-real, allocatable  ::  sin_v_latitude (:,:)
-real, allocatable  ::  tan_v_latitude (:,:)
-real, allocatable, target ::  cos_v_latitude (:,:)
-real, allocatable, target ::  sec_v_latitude (:,:)
-real, allocatable  ::  cos_theta_longitude (:,:)
-real, allocatable  ::  sin_theta_longitude (:,:)
-real, allocatable  ::  cos_u_longitude (:,:)
-real, allocatable  ::  sin_u_longitude (:,:)
 
-! --- Variables relating to true geographic location ---
-real, allocatable  ::  true_latitude (:,:)
-real, allocatable  ::  true_longitude (:,:)
 
 end module trignometric_Mod

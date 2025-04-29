@@ -16,7 +16,7 @@ use atm_fields_bounds_mod,  only: tdims
 use electric_inputs_mod,    only: g1, g2
 use cderived_mod,           only: delta_lambda, delta_phi
 use level_heights_mod,      only: r_theta_levels
-use trignometric_mod,       only: fv_cos_theta_latitude, cos_theta_latitude
+use trignometric_mod,       only: cos_theta_latitude
 
 ! Dr Hook modules
 use yomhook,                only: lhook, dr_hook
