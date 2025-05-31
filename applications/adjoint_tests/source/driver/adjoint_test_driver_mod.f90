@@ -52,6 +52,11 @@ contains
     use atlt_poly1d_vert_w3_recon_alg_mod,          only : atlt_poly1d_vert_w3_recon_alg
     use adjt_w3h_advective_update_alg_mod,          only : adjt_w3h_advective_update_alg
     use atlt_w3h_advective_update_alg_mod,          only : atlt_w3h_advective_update_alg
+    !- Lookup table solutions.
+    use adjt_poly1d_recon_lookup_alg_mod,           only : adjt_poly1d_recon_lookup_alg
+    use adjt_poly2d_recon_lookup_alg_mod,           only : adjt_poly2d_recon_lookup_alg
+    use adjt_poly_adv_upd_lookup_alg_mod,           only : adjt_poly_adv_upd_lookup_alg
+    use adjt_w3h_adv_upd_lookup_alg_mod,            only : adjt_w3h_adv_upd_lookup_alg
 
     ! Handwritten algorithm tests
     ! ./interpolation
@@ -132,14 +137,20 @@ contains
     call run_gen_adj_kernel_tests( mesh, chi, panel_id )
 
     call log_event( "TESTING adjoint kernels", LOG_LEVEL_INFO )
+
     ! ./transport/mol
-    call atlt_poly_adv_update_alg( mesh )
-    call adjt_poly_adv_update_alg( mesh )
     call adjt_poly1d_reconstruction_alg( mesh )
     call adjt_poly2d_reconstruction_alg( mesh )
+    call atlt_poly_adv_update_alg( mesh )
+    call adjt_poly_adv_update_alg( mesh )
     call atlt_poly1d_vert_w3_recon_alg( mesh )
     call adjt_w3h_advective_update_alg( mesh )
     call atlt_w3h_advective_update_alg( mesh )
+    ! -- Lookup table solutions.
+    call adjt_poly1d_recon_lookup_alg( mesh )
+    call adjt_poly2d_recon_lookup_alg( mesh )
+    call adjt_poly_adv_upd_lookup_alg( mesh )
+    call adjt_w3h_adv_upd_lookup_alg( mesh )
 
     ! ./core_dynamics
     call atlt_pressure_gradient_bd_alg( mesh )
