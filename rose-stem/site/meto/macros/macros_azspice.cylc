@@ -13,7 +13,8 @@
                         xios_nodes=0,
                         ocean_nodes=0,
                         river_nodes=0,
-                        ranks_per_node=0) %}
+                        ranks_per_node=0,
+                        ranks_depth_pad=1) %}
 
     {{ set_memory(memory) }}
             --ntasks={{mpi_ranks|int + xios_nodes|int}}

@@ -13,14 +13,25 @@
                         xios_nodes,
                         ocean_nodes,
                         river_nodes,
-                        ranks_per_node) %}
+                        ranks_per_node,
+                        ranks_depth_pad=1) %}
+
+    {# The depth setting, padded or otherwise, is tied to threads #}
+    {% set depth_val =  threads|int %}
+    {# If the depth padding is present, and it is greater than the thread qty, #}
+    {# we will use it instead. There may be occations where users use a pad, and  #}
+    {# threads where there are memory concerns #}
+    {% if (ranks_depth_pad|int > threads|int) %}
+        {% set depth_val =  ranks_depth_pad|int %}
+    {% endif %}
+
     {# If an override is set on ex1a #}
-    {% if (ranks_per_node > 0) and ((ranks_per_node|int * threads|int) <= ex1a_cores_per_node|int) %}
+    {% if (ranks_per_node > 0) and ((ranks_per_node|int * depth_val|int) <= ex1a_cores_per_node|int) %}
         {% set lfric_nodes = (mpi_ranks|float / ranks_per_node|float)|round(0, 'ceil')|int %}
     {% else %}
-        {% set checking_total_cpus = (mpi_ranks|int * threads|int)|int %}
+        {% set checking_total_cpus = (mpi_ranks|int * depth_val|int)|int %}
         {# Threads use cpus, and change how any decomposition can be placed into a numa and a node #}
-        {% if threads|int > 1 %}
+        {% if depth_val|int > 1 %}
             {# Setup some default values #}
             {% set found_multiplier = namespace(bool=false) %}
             {% set last_valid_index = namespace(int=0) %}
@@ -29,7 +40,7 @@
             {# We want to get to or as close to the cores_per_node. #}
             {% set ex1a_cores_per_node_threshold = ex1a_cores_per_node|int + 1 %}
             {% for check_iterator in range(ex1a_cores_per_node_threshold) %}
-                {% set checking_maths.int = (check_iterator|int * threads|int)|int %}
+                {% set checking_maths.int = (check_iterator|int * depth_val|int)|int %}
                 {# Check if the value so far fits accross numas and into the node and store it #}
                 {# The last to fit will be kept #}
                 {% if (check_iterator|int % ex1a_socket_per_node|int == 0) %}
@@ -41,7 +52,7 @@
             {% endfor %}
             {# Else fail safe - this will likely be due to not splitting over the numas #}
                 {% if found_multiplier.bool %}
-                    {% set cpus_per_node_max = ( last_valid_index.int|int * threads|int )|int  %}
+                    {% set cpus_per_node_max = ( last_valid_index.int|int * depth_val|int )|int  %}
                 {% else %}
                     {% if (checking_total_cpus|int >= ex1a_cores_per_node|int) %}
                         {% set cpus_per_node_max = ex1a_cores_per_node|int  %}
@@ -80,13 +91,14 @@
                         xios_nodes=0,
                         ocean_nodes=0,
                         river_nodes=0,
-                        ranks_per_node=0) %}
+                        ranks_per_node=0,
+                        ranks_depth_pad=1) %}
 
     {% set total_other_ranks = xios_nodes + ocean_nodes + river_nodes %}
     {% set lfric_cores = mpi_ranks * threads %}
     {% if lfric_cores >= ex1a_cores_per_node or total_other_ranks > 0 %}
         {# This needs to be run on the normal queue #}
-        {{ normal_queue(mpi_ranks, threads, xios_nodes, ocean_nodes, river_nodes, ranks_per_node) }}
+        {{ normal_queue(mpi_ranks, threads, xios_nodes, ocean_nodes, river_nodes, ranks_per_node, ranks_depth_pad) }}
     {% else %}
         {# This is small enough to run on the shared queue #}
         {{ shared_queue(mpi_ranks * threads) }}

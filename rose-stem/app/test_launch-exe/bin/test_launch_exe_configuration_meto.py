@@ -89,7 +89,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 4 --ppn 4 --depth 6 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 4 --depth 6 --ppn 4 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -110,7 +110,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 6 --ppn 6 --depth 2 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 6 --depth 2 --ppn 6 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -173,7 +173,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "lfric_atm")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 12 --ppn 12 --depth 2 $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit/lfric_atm configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 12 --depth 2 --ppn 12 $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit/lfric_atm configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -236,7 +236,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/shallow_water/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "shallow_water")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 6 --ppn 6 --depth 3 $OUTPUT_ROOT/bin/shallow_water/gnu_fast-debug-64bit/shallow_water configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 6 --depth 3 --ppn 6 $OUTPUT_ROOT/bin/shallow_water/gnu_fast-debug-64bit/shallow_water configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -383,7 +383,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 384 --ppn 128 --depth 1 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 384 --depth 1 --ppn 128 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -437,6 +437,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("CORES_PER_NODE", "128")
         monkeypatch.setenv("NUMA_REGIONS_PER_NODE", "2")
         monkeypatch.setenv("OMP_NUM_THREADS", "4")
+        monkeypatch.setenv("RANKS_DEPTH_PAD", "3")
         monkeypatch.setenv("TOTAL_RANKS", "6")
         monkeypatch.setenv("XIOS_SERVER_MODE", "False")
         monkeypatch.setenv("XIOS_SERVER_RANKS", "0")
@@ -446,7 +447,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 6 --ppn 6 --depth 4 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 6 --depth 4 --ppn 6 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -458,6 +459,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("CORES_PER_NODE", "128")
         monkeypatch.setenv("NUMA_REGIONS_PER_NODE", "2")
         monkeypatch.setenv("OMP_NUM_THREADS", "2")
+        monkeypatch.setenv("RANKS_DEPTH_PAD", "3")
         monkeypatch.setenv("TOTAL_RANKS", "3")
         monkeypatch.setenv("XIOS_SERVER_MODE", "False")
         monkeypatch.setenv("XIOS_SERVER_RANKS", "0")
@@ -467,7 +469,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 3 --ppn 3 --depth 2 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 3 --depth 3 --ppn 3 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -593,7 +595,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 5 --ppn 5 --depth 2 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 5 --depth 2 --ppn 5 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -614,7 +616,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit")
         monkeypatch.setenv("EXEC_NAME", "gungho_model")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 5 --ppn 5 --depth 3 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 5 --depth 3 --ppn 5 $OUTPUT_ROOT/bin/gungho_model/gnu_fast-debug-64bit/gungho_model configuration.nml ")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -635,7 +637,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("BIN_DIR", "$OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32")
         monkeypatch.setenv("EXEC_NAME", "lfric_atm")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 1176 --ppn 128 --depth 1 $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32/lfric_atm configuration.nml  : --cpu-bind=depth --np 16 --ppn 4 xios_server.exe")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 1176 --depth 1 --ppn 128 $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32/lfric_atm configuration.nml  : --cpu-bind=depth --np 16 --ppn 4 xios_server.exe")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -657,7 +659,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("EXEC_NAME", "lfric_atm")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
         monkeypatch.setenv("MEMORY_PROFILE", "True")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --line-buffer --label --cpu-bind=depth --np 1176 --ppn 128 --depth 1 /usr/bin/time -f max_mem_lfric_atm_%Mkb $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32/lfric_atm configuration.nml  : --cpu-bind=depth --np 16 --ppn 4 /usr/bin/time -f max_mem_xios_server_%Mkb xios_server.exe")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --line-buffer --label --cpu-bind=depth --np 1176 --depth 1 --ppn 128 /usr/bin/time -f max_mem_lfric_atm_%Mkb $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32/lfric_atm configuration.nml  : --cpu-bind=depth --np 16 --ppn 4 /usr/bin/time -f max_mem_xios_server_%Mkb xios_server.exe")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")
@@ -679,7 +681,7 @@ class TestLaunchExeEnv():
         monkeypatch.setenv("EXEC_NAME", "lfric_atm")
         monkeypatch.setenv("PAT_EXE_EXTEN", "")
         monkeypatch.setenv("MEMORY_PROFILE", "False")
-        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 1176 --ppn 128 --depth 1 $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32/lfric_atm configuration.nml  : --cpu-bind=depth --np 16 --ppn 4 xios_server.exe")
+        monkeypatch.setenv("TEST_LAUNCH_EXE_EXEC", "mpiexec --cpu-bind=depth --np 1176 --depth 1 --ppn 128 $OUTPUT_ROOT/bin/lfric_atm/cce_fast-debug-64bit-rbl32/lfric_atm configuration.nml  : --cpu-bind=depth --np 16 --ppn 4 xios_server.exe")
         sr = subprocess.run(self.launch_exe,
                             capture_output=True)
         assert sr.returncode == 0, sr.stderr.decode("UTF-8")

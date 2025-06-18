@@ -18,6 +18,7 @@
 # xios_nodes (int)
 # mpi_parts_xios (int)
 # CORES_PER_NODE_OVERRIDE (int)
+# RANKS_DEPTH_PAD (int)
 # BIN_DIR (string)
 # EXEC_NAME (string)
 # PAT_EXE_EXTEN (string)
@@ -64,13 +65,27 @@ if [ "${TARGET_PLATFORM}" = "meto-ex1a" ] ; then
     CORES_PER_NODE_OVERRIDE=0
   fi
 
+  if [ -z "${RANKS_DEPTH_PAD+x}" ] ; then
+    RANKS_DEPTH_PAD=1
+  fi
+
+  # The depth setting, padded or otherwise, is tied to threads
+  DEPTH_VAL=${OMP_NUM_THREADS}
+
+  # If the depth padding is present, and it is greater than the thread qty,
+  # we will use it instead. There may be occations where users use a pad, and 
+  # threads where there are memory concerns
+  if (( "${RANKS_DEPTH_PAD}" > "${OMP_NUM_THREADS}" )); then
+    DEPTH_VAL=${RANKS_DEPTH_PAD}
+  fi
+
   # Set some default values based on cores per node, hyperthreads and OpenMP
   DEFAULT_CORES_PER_NODE="$(( CORES_PER_NODE * HYPERTHREADS ))"
   STANDARD_CORES_PER_NODE="${DEFAULT_CORES_PER_NODE}"
-  DEFAULT_CORES_PER_NODE="$(( DEFAULT_CORES_PER_NODE / OMP_NUM_THREADS ))"
+  DEFAULT_CORES_PER_NODE="$(( DEFAULT_CORES_PER_NODE / DEPTH_VAL ))"
   SET_CORES_PER_NODE="${DEFAULT_CORES_PER_NODE}"
 
-  CHECK_LOCAL_CPUS_USED="$(( TOTAL_RANKS * OMP_NUM_THREADS ))"
+  CHECK_LOCAL_CPUS_USED="$(( TOTAL_RANKS * DEPTH_VAL ))"
   CORE_PER_NUMA="$(( CORES_PER_NODE * HYPERTHREADS ))"
   CORE_PER_NUMA="$(( CORE_PER_NUMA / NUMA_REGIONS_PER_NODE ))"
 
@@ -81,7 +96,7 @@ if [ "${TARGET_PLATFORM}" = "meto-ex1a" ] ; then
     echo "Override provided"
     # we are checking a value is set, which times by threads comes out sensible
     TMP_RANKS_PER_NODE="$(( CORES_PER_NODE_OVERRIDE * HYPERTHREADS ))"
-    CHECK_RANKS_PER_NODE="$(( TMP_RANKS_PER_NODE * OMP_NUM_THREADS ))"
+    CHECK_RANKS_PER_NODE="$(( TMP_RANKS_PER_NODE * DEPTH_VAL ))"
     SET_CORES_PER_NODE="${CORES_PER_NODE_OVERRIDE}"
     # If we have an specified cores per node, do checks then set
     # Check if this value is less than CPUs to a node
@@ -103,7 +118,7 @@ if [ "${TARGET_PLATFORM}" = "meto-ex1a" ] ; then
       # check if the index will divide cleanly over numa
         if [ $(( INDEX % NUMA_REGIONS_PER_NODE )) -eq 0 ] ; then
         # if it does ensure this remains a value which fits on the node
-          TEST_SET_CORES="$(( INDEX * OMP_NUM_THREADS ))"
+          TEST_SET_CORES="$(( INDEX * DEPTH_VAL ))"
           if [ $TEST_SET_CORES -le $STANDARD_CORES_PER_NODE ] ; then
             SET_CORES_PER_NODE=$INDEX
           fi
@@ -123,12 +138,12 @@ LAUNCHER_OPTS=""
 if [ "${RUN_METHOD}" = "mpiexec" ] ; then
   if [ "${TARGET_PLATFORM}" = "meto-ex1a" ] ; then
     if (( "${CORES_PER_NODE_OVERRIDE}" == "0" )) && (( "${CHECK_LOCAL_CPUS_USED}" <= "${SET_CORES_PER_NODE}" )) ; then
-      LAUNCHER_OPTS="--cpu-bind=depth --np ${TOTAL_RANKS} --depth ${OMP_NUM_THREADS}"
+      LAUNCHER_OPTS="--cpu-bind=depth --np ${TOTAL_RANKS} --depth ${DEPTH_VAL}"
     elif [[ ! -z "${XIOS_SERVER_MODE}" && "${XIOS_SERVER_MODE}" = "True" && \
 	      "${xios_nodes}" = "0" ]] ; then
-      LAUNCHER_OPTS="--cpu-bind=depth --np ${TOTAL_RANKS} --depth ${OMP_NUM_THREADS}"
+      LAUNCHER_OPTS="--cpu-bind=depth --np ${TOTAL_RANKS} --depth ${DEPTH_VAL}"
     else
-      LAUNCHER_OPTS="--cpu-bind=depth --np ${TOTAL_RANKS} --ppn ${SET_CORES_PER_NODE} --depth ${OMP_NUM_THREADS}"
+      LAUNCHER_OPTS="--cpu-bind=depth --np ${TOTAL_RANKS} --depth ${DEPTH_VAL} --ppn ${SET_CORES_PER_NODE}"
     fi
     if [[ ! -z "${XIOS_SERVER_MODE}" && "${XIOS_SERVER_MODE}" = "True" ]] ; then
       if [ "${xios_nodes}" = "0" ] ; then
