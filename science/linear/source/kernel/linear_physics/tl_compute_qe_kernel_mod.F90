@@ -7,7 +7,7 @@
 module tl_compute_qe_kernel_mod
 
   use argument_mod,      only : arg_type, func_type,   &
-                                GH_FIELD, GH_OPERATOR, & 
+                                GH_FIELD, GH_OPERATOR, &
                                 GH_SCALAR, GH_INTEGER, &
                                 GH_READ, GH_INC, GH_READWRITE,      &
                                 GH_REAL, CELL_COLUMN, GH_BASIS, GH_EVALUATOR, &
@@ -74,7 +74,7 @@ subroutine       tl_compute_qe_code( nlayers,           &
                                      z_land_m,             &
                                      z_sea_m,              &
                                      L_0_m,                &
-                                     ndf_w3, undf_w3, map_w3, & 
+                                     ndf_w3, undf_w3, map_w3, &
                                      ndf_wtheta, undf_wtheta, map_wtheta, &
                                      ndf_2d, undf_2d, map_2d )
 
@@ -86,7 +86,7 @@ subroutine       tl_compute_qe_code( nlayers,           &
 
   integer(kind=i_def),                       intent(in) :: undf_w3, ndf_w3
   integer(kind=i_def), dimension(ndf_w3),    intent(in) :: map_w3
- 
+
   integer(kind=i_def),                       intent(in) :: undf_wtheta, ndf_wtheta
   integer(kind=i_def), dimension(ndf_wtheta),intent(in) :: map_wtheta
 
@@ -111,18 +111,18 @@ subroutine       tl_compute_qe_code( nlayers,           &
    real(kind=r_def)    :: roughness_length_m
 
    REAL(kind=r_def), PARAMETER :: Von_Karman=0.4_r_def
-   REAL(kind=r_def) :: L_diff_m(1:BLevs_m)  
+   REAL(kind=r_def) :: L_diff_m(1:BLevs_m)
 
    real(kind=r_def)    :: u1
 
 ! ============================== setup roughness_length_m ==============================
- 
+
      df = 1
      roughness_length_m = z_land_m*ls_land_fraction(map_2d(df)) + &
       z_sea_m*(1.0_r_def-ls_land_fraction(map_2d(df)))
 
 ! ============================== setup L_diff ==============================
-! L_diff is on centre of horizontal faces - for convenience indexed by centre of cell above 
+! L_diff is on centre of horizontal faces - for convenience indexed by centre of cell above
 
 ! vertical numbering (k index) matches that in PF_bdy_lyr.f90, in which centre of lowest cell is rho level 1
 ! L_diff_m(k) defined for 1 <= k <= BLevs_m
@@ -145,7 +145,7 @@ END DO
 
 ! ============================== Define Q and E ==============================
 ! E is on cell centres
-! Q is on centre of horizontal faces - for convenience indexed by centre of cell above 
+! Q is on centre of horizontal faces - for convenience indexed by centre of cell above
 
 ! vertical numbering (k index) matches that in PF_bdy_lyr.f90, in which centre of lowest cell is rho level 1
 ! Q(k) defined for 0 <= k <= BLevs_m
@@ -154,11 +154,11 @@ END DO
 df=1
 u1=u_land_m*ls_land_fraction(map_2d(df)) + &
       u_sea_m*(1.0_r_def-ls_land_fraction(map_2d(df)))
-      
+
 DO k=0,BLevs_m
       IF (k == 0) THEN
         Q( map_w3(df) + k)=Von_Karman * u1 &
-          / LOG(((height_w3(map_w3(df)+0) - height_wth(map_wtheta(df)+0)        & ! 
+          / LOG(((height_w3(map_w3(df)+0) - height_wth(map_wtheta(df)+0)        & !
           + roughness_length_m)/(roughness_length_m)))
       ELSE    ! ie k >= 1
         Q( map_w3(df) + k)=L_diff_m(k) * u1 &

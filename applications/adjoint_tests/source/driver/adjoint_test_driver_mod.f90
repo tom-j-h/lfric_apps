@@ -197,7 +197,7 @@ contains
     call adjt_compute_vorticity_alg( mesh )
     call atlt_derive_exner_from_eos_alg( mesh )
     call atlt_moist_dyn_factors_alg( mesh )
-    
+
     ! ./linear_physics
     call atlt_bdy_lyr_alg( modeldb, mesh )
 

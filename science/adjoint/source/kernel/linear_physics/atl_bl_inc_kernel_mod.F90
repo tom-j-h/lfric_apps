@@ -6,7 +6,7 @@
 module atl_bl_inc_kernel_mod
 
   use argument_mod,      only : arg_type,              &
-                                GH_FIELD, GH_OPERATOR, & 
+                                GH_FIELD, GH_OPERATOR, &
                                 GH_SCALAR, GH_INTEGER, &
                                 GH_READ, GH_INC,       &
                                 GH_REAL, CELL_COLUMN,  &
@@ -49,7 +49,7 @@ module atl_bl_inc_kernel_mod
 
   !> @brief (Adjoint of) computes boundary layer u inc
   !! @param[in] nlayers Number of layers
-  !! @param[in,out] u_inc Output 
+  !! @param[in,out] u_inc Output
   !! @param[in] ndf_w2 Number of degrees of freedom per cell for the output field
   !! @param[in] undf_w2 Unique number of degrees of freedom  for the output field
   !! @param[in] map_w2 Dofmap for the cell at the base of the column for the output field

@@ -48,7 +48,7 @@ module tl_bdy_lyr_alg_mod
                                                 z_land_m,             &
                                                 z_sea_m,              &
                                                 L_0_m
-                                               
+
   use planet_config_mod,                   only: cp, kappa, rd, p_zero
   use tl_kinetic_energy_gradient_kernel_mod, &
                                            only: tl_kinetic_energy_gradient_kernel_type
@@ -154,9 +154,9 @@ subroutine tl_bdy_lyr_alg(modeldb, u_bl_inc, state, ls_state, dt)
     type( field_collection_type ), pointer :: ls_fields
     type( field_type), pointer ::  ls_land_fraction => null()
 
-    type( field_type) ::  Q 
+    type( field_type) ::  Q
     type( field_type) ::  E
-    type( field_type) ::  auv 
+    type( field_type) ::  auv
     type( field_type) ::  buv_inv
 
     type(integer_field_type), pointer :: face_selector_ew => null()
@@ -166,9 +166,9 @@ subroutine tl_bdy_lyr_alg(modeldb, u_bl_inc, state, ls_state, dt)
     real(kind=r_def)    :: fmin
     real(kind=r_def)    :: fmax
     real(kind=r_def)    :: ip
-    
+
     if ( subroutine_timers ) call timer('tl_bdy_lyr_alg')
-    
+
     ls_fields => modeldb%fields%get_field_collection("ls_fields")
 
     call ls_fields%get_field('ls_land_fraction', ls_land_fraction)
@@ -214,13 +214,13 @@ subroutine tl_bdy_lyr_alg(modeldb, u_bl_inc, state, ls_state, dt)
 
       call rho%copy_field_properties( Q )
       call rho%copy_field_properties( E )
-      
+
       call invoke(setval_c(Q,0.0_r_def),&
                   setval_c(E,0.0_r_def) )
-                  
+
       call u%copy_field_properties( auv )
       call u%copy_field_properties( buv_inv )
-                  
+
       call invoke(setval_c(auv,0.0_r_def),&
                   setval_c(buv_inv,0.0_r_def) )
 
@@ -241,7 +241,7 @@ subroutine tl_bdy_lyr_alg(modeldb, u_bl_inc, state, ls_state, dt)
                                              u_sea_m,              &
                                              z_land_m,             &
                                              z_sea_m,              &
-                                             L_0_m ) )                                       
+                                             L_0_m ) )
 
      call invoke ( tl_compute_aubu_kernel_type(auv,                  &
                                                buv_inv,              &
@@ -250,7 +250,7 @@ subroutine tl_bdy_lyr_alg(modeldb, u_bl_inc, state, ls_state, dt)
                                                height_w2,            &
                                                w2_rmultiplicity,     &
                                                dt,                   &
-                                               Blevs_m ) )     
+                                               Blevs_m ) )
 
       call get_field_minmax( state(igh_u), fmin, fmax )
       write( log_scratch_space, '(a,1x,2(e12.5,1x))') 'tl_bdy_lyr_alg, min,max state(igh_u) before tl_bl_inc=',fmin, fmax

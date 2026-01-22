@@ -7,7 +7,7 @@
 module tl_compute_aubu_kernel_mod
 
   use argument_mod,      only : arg_type, func_type,   &
-                                GH_FIELD, GH_OPERATOR, & 
+                                GH_FIELD, GH_OPERATOR, &
                                 GH_SCALAR, GH_INTEGER, &
                                 GH_READ, GH_INC, GH_READWRITE,      &
                                 GH_REAL, CELL_COLUMN, GH_BASIS, GH_EVALUATOR, &
@@ -63,7 +63,7 @@ subroutine       tl_compute_aubu_code(nlayers,             &
                                      w2_rmultiplicity,     &
                                      dt,                   &
                                      Blevs_m,                 &
-                                     ndf_w2, undf_w2, map_w2, & 
+                                     ndf_w2, undf_w2, map_w2, &
                                      ndf_w3, undf_w3, map_w3)
 
 
@@ -98,7 +98,7 @@ df3=1
 
     do df = 1,4
       do k = 0, BLevs_m
-    
+
       IF (k == 0) THEN
         Auv(map_w2(df)+k) = Auv(map_w2(df)+k)+         &
                   w2_rmultiplicity(map_w2(df) ) *      &
@@ -114,9 +114,9 @@ df3=1
                   ( w2_rmultiplicity(map_w2(df)+k ) * E( map_w3(df3) + k) ) / dt
 
       END IF
-   
-    end do ! k = 0, BLevs_m      
-  end do ! df = 1,4      
+
+    end do ! k = 0, BLevs_m
+  end do ! df = 1,4
 
 end subroutine tl_compute_aubu_code
 

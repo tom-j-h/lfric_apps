@@ -662,13 +662,13 @@ contains
                        setval_c( self%rhs_np1(igh_t), 0.0_r_def ) )
         end if
 
-        if (l_boundary_layer) call add_bundle(self%rhs_phys,self%rhs_np1,self%rhs_phys, bundle_size)
+        if (l_boundary_layer) call add_bundle(self%rhs_phys,self%rhs_np1,self%rhs_phys, bundle_size)  
         call add_bundle( self%rhs_adv, self%rhs_np1, self%rhs_adv, bundle_size )
         call add_bundle( self%rhs_n, self%rhs_np1, self%rhs_n, bundle_size )
         call bundle_ax( -1.0_r_def, self%rhs_np1, self%rhs_np1, bundle_size )
 
         if (inner > 1) then
-
+	
           call set_bundle_scalar( 0.0_r_def,self%state1,bundle_size )
           call set_bundle_scalar( 0.0_r_def,self%state2,bundle_size )
 
@@ -685,14 +685,14 @@ contains
 
           call add_bundle( self%state,self%state2 ,self%state, bundle_size )
           call add_bundle( self%state,self%state1 ,self%state, bundle_size )
-
-    end if
+	
+	end if
 
       end do inner_dynamics_loop
       !-------------------------------------------------------------------------
       ! End of inner (nonlinear, Coriolis) loop
       !-------------------------------------------------------------------------
-
+						    
       if (l_boundary_layer) then
 
         call u%copy_field_properties( u_bl_inc )
@@ -725,45 +725,45 @@ contains
 
         ! Adj of u_bl_inc_flux = u_bl_inc * dA
         call invoke( inc_x_times_y( u_bl_inc_flux,  dA ),     &
-                     inc_x_plus_y( u_bl_inc, u_bl_inc_flux ), &
+                     inc_x_plus_y( u_bl_inc, u_bl_inc_flux ), & 
                      setval_c(u_bl_inc_flux, 0.0_r_def) )
 
         call atl_bdy_lyr_alg(modeldb, u_bl_inc, self%state_star, &
                              self%ls_state_itns(:,ls_outer,1), cast_dt )
-
+                                                
         ! Adj of state_star(igh_u) <- u_star_physical
         call invoke( inc_x_plus_y(u_star_physical , self%state_star(igh_u) ), &
                      setval_c( self%state_star(igh_u), 0.0_r_def) )
 
         ! Adj of u_star_physical = u_star / dA
         call invoke( inc_x_divideby_y( u_star_physical,  dA ), &
-                     inc_x_plus_y( u_star, u_star_physical ),  &
-                      setval_c(u_star_physical, 0.0_r_def) )
+                     inc_x_plus_y( u_star, u_star_physical ),  &                     
+                      setval_c(u_star_physical, 0.0_r_def) )                                  
 
         ! Adj of u_star = du + state(igh_u)
         call invoke( inc_X_plus_Y( du, u_star ),                &
                      inc_X_plus_Y( self%state(igh_u), u_star ), &
-             setval_c(u_star, 0.0_r_def)  )
+	  	   setval_c(u_star, 0.0_r_def)  )
 
-        ! Adj of call mass_matrix_solver_alg(du, rhsu_np1 )
+        ! Adj of call mass_matrix_solver_alg(du, rhsu_np1 ) 
         call mass_matrix_solver_alg( rhsu_np1, du)
 
         ! Adj of inc_X_plus_Y(rhsu_np1, self%rhs_adv(igh_u))
         call invoke( inc_X_plus_Y( self%rhs_adv(igh_u),rhsu_np1) )
-
+      
         ! Adj of rhsu_np1 <-  -rhs_np1(igh_u) + rhs_n(igh_u)
         call invoke( inc_X_plus_bY(self%rhs_np1(igh_u), -1.0_r_def, rhsu_np1), &
-                 inc_X_plus_Y(self%rhs_n(igh_u), rhsu_np1),                &
-               setval_c( rhsu_np1, 0.0_r_def) )
+	             inc_X_plus_Y(self%rhs_n(igh_u), rhsu_np1),                &
+	  	     setval_c( rhsu_np1, 0.0_r_def) )
 
-        ! Adj of du <- 0
+        ! Adj of du <- 0    
         call invoke( setval_c(du, 0.0_r_def))
-
+           
       end if ! l_boundary_layer
 
       call set_bundle_scalar( 0.0_r_def,self%state1,bundle_size )
       call set_bundle_scalar( 0.0_r_def,self%state2,bundle_size )
-
+	
       call atl_rhs_alg(   self%rhs_np1,                                &
                           -varalpha*cast_dt,                           &
                           self%state1,                                 &

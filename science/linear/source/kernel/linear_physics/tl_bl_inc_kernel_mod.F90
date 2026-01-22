@@ -7,7 +7,7 @@
 module tl_bl_inc_kernel_mod
 
   use argument_mod,      only : arg_type,              &
-                                GH_FIELD, GH_OPERATOR, & 
+                                GH_FIELD, GH_OPERATOR, &
                                 GH_SCALAR, GH_INTEGER, &
                                 GH_READ, GH_INC,       &
                                 GH_REAL, CELL_COLUMN,  &
@@ -50,7 +50,7 @@ contains
 
 !> @brief Computes boundary layer u inc
 !! @param[in] nlayers Number of layers
-!! @param[in,out] u_inc Output 
+!! @param[in,out] u_inc Output
 !! @param[in] ndf_w2 Number of degrees of freedom per cell for the output field
 !! @param[in] undf_w2 Unique number of degrees of freedom  for the output field
 !! @param[in] map_w2 Dofmap for the cell at the base of the column for the output field
@@ -75,8 +75,8 @@ subroutine       tl_bl_inc_code(     nlayers,              &
   integer(kind=i_def), dimension(ndf_w2),  intent(in) :: map_w2
 
   real(kind=r_def), dimension(undf_w2),    intent(in) :: u
-  REAL(kind=r_def), dimension(undf_w2),    intent(in) :: Auv  
-  REAL(kind=r_def), dimension(undf_w2),    intent(in) :: Buv_inv  
+  REAL(kind=r_def), dimension(undf_w2),    intent(in) :: Auv
+  REAL(kind=r_def), dimension(undf_w2),    intent(in) :: Buv_inv
 
   real(kind=r_def), dimension(undf_w2),    intent(inout) :: u_inc
 
@@ -100,7 +100,7 @@ subroutine       tl_bl_inc_code(     nlayers,              &
 
   ! Loop over horizontal W2 DoFs
   do j = 1, face_selector_ew(map_w3_2d(1)) + face_selector_ns(map_w3_2d(1))
-  
+
     df = j
     if (j == 3 .and. face_selector_ns(map_w3_2d(1)) == 2                       &
                .and. face_selector_ew(map_w3_2d(1)) == 1) df = N
@@ -136,7 +136,7 @@ subroutine       tl_bl_inc_code(     nlayers,              &
    END DO
 
 ! ====================== transform to upper triangular form  ======================
- 
+
    DO k=1,BLevs_m
       IF (k == 1) THEN
         a0(1) = 1.0_r_def/a0(1)
