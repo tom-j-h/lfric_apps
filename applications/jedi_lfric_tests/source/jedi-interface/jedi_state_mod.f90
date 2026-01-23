@@ -411,7 +411,7 @@ subroutine setup_interface_to_modeldb( self )
 
     call self%fields_to_modeldb(ivar)%initialise( atlas_data_ptr,     &
                                                   horizontal_map_ptr, &
-                                                  lfric_field_ptr, is_2d=is2d )
+                                                  lfric_field_ptr, is_2d=is_2d )
 
   end do
 
