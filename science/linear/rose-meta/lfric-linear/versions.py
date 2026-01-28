@@ -46,11 +46,11 @@ class vn30_t99(MacroUpgrade):
         return config, self.reports
 
 
-class vn30_t129(MacroUpgrade):
-    # Upgrade macro for #129 by Tom Hill
+class vn30_t182(MacroUpgrade):
+    # Upgrade macro for #182 by Tom Hill
 
-    BEFORE_TAG = "vn3.0"
-    AFTER_TAG = "vn3.0_t129"
+    BEFORE_TAG = "vn3.0_t99"
+    AFTER_TAG = "vn3.0_t182"
 
     def upgrade(self, config, meta_config=None):
         """Add linear boundary layer physics scheme"""
