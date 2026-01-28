@@ -58,7 +58,7 @@ module tl_si_timestep_alg_mod
   use sci_set_any_dof_kernel_mod,         only: set_any_dof_kernel_type
   use dg_inc_matrix_vector_kernel_mod,    only: dg_inc_matrix_vector_kernel_type
   use matrix_vector_kernel_mod,           only: matrix_vector_kernel_type
-  use sci_enforce_bc_kernel_mod,   only: enforce_bc_kernel_type
+  use sci_enforce_bc_kernel_mod,          only: enforce_bc_kernel_type
   use stabilise_bl_u_kernel_mod,          only: stabilise_bl_u_kernel_type
 
   ! Derived Types
@@ -112,7 +112,6 @@ module tl_si_timestep_alg_mod
   use mixing_config_mod,           only: smagorinsky
 
   use timing_mod,                  only: start_timing, stop_timing, tik, LPROF
-
 
   implicit none
 
@@ -786,42 +785,42 @@ contains
         call u%copy_field_properties( u_star_physical )
         call rhs_adv(igh_u)%copy_field_properties( rhsu_np1 )
 
-      ! Compute u_star = u_np1 + M^-1(-rhs_np1 + rhs_n + rhs_a)
-      ! du = M^-1(-rhs_np1 + rhs_n + rhs_a
-      call du%initialise( rhs_adv(igh_u)%get_function_space() )
-      call rhsu_np1%initialise( rhs_adv(igh_u)%get_function_space() )
-      call invoke( setval_c(du, 0.0_r_def),                                       &
-                   aX_plus_Y(rhsu_np1, -1.0_r_def, rhs_np1(igh_u), rhs_n(igh_u)), &
-                   inc_X_plus_Y(rhsu_np1, rhs_adv(igh_u)) )
+        ! Compute u_star = u_np1 + M^-1(-rhs_np1 + rhs_n + rhs_a)
+        ! du = M^-1(-rhs_np1 + rhs_n + rhs_a
+        call du%initialise( rhs_adv(igh_u)%get_function_space() )
+        call rhsu_np1%initialise( rhs_adv(igh_u)%get_function_space() )
+        call invoke( setval_c( du, 0.0_r_def ),                                       &
+                     aX_plus_Y( rhsu_np1, -1.0_r_def, rhs_np1(igh_u), rhs_n(igh_u) ), &
+                     inc_X_plus_Y( rhsu_np1, rhs_adv(igh_u) ) )
 
-      call mass_matrix_solver_alg(du, rhsu_np1 )
+        call mass_matrix_solver_alg( du, rhsu_np1 )
 
-      call invoke( X_plus_Y(u_star, du, state(igh_u)) )
+        call invoke( X_plus_Y( u_star, du, state(igh_u) ) )
 
-      ! u_star_physical = u_star / dA
-      ! i.e., divide u_star from boundary layer by dA to transform from flux to velocity
-      dA => get_da_at_w2(mesh%get_id())
-      call invoke( x_divideby_y ( u_star_physical, u_star, dA ) )
+        ! u_star_physical = u_star / dA
+        ! i.e., divide u_star from boundary layer by dA to transform from flux to velocity
+        dA => get_da_at_w2(mesh%get_id())
+        call invoke( x_divideby_y ( u_star_physical, u_star, dA ) )
 
-      ! For convenience place u_star_physical as igh_u component of state_star
-      call clone_bundle(state,state_star, bundle_size)
-      call copy_bundle(state, state_star, bundle_size)
-      call invoke( setval_x(state_star(igh_u),u_star_physical ) )
+        ! For convenience place u_star_physical as igh_u component of state_star
+        call clone_bundle( state,state_star, bundle_size )
+        call copy_bundle( state, state_star, bundle_size )
+        call invoke( setval_x( state_star(igh_u), u_star_physical ) )
 
-      call tl_bdy_lyr_alg(modeldb, u_bl_inc, state_star, ls_state_itns(:,ls_outer,1), cast_dt )
-      ! u_bl_inc computed from state_star(igh_u)
-      ! NB use state_star
+        call tl_bdy_lyr_alg( modeldb, u_bl_inc, state_star, ls_state_itns(:,ls_outer,1), cast_dt )
+        ! u_bl_inc computed from state_star(igh_u)
+        ! NB use state_star
 
-      ! u_bl_inc_flux = u_bl_inc * dA
-      ! i.e., multiply by dA to transform from velocity to flux
-      call invoke( x_times_y( u_bl_inc_flux, u_bl_inc, dA ) )
+        ! u_bl_inc_flux = u_bl_inc * dA
+        ! i.e., multiply by dA to transform from velocity to flux
+        call invoke( x_times_y( u_bl_inc_flux, u_bl_inc, dA ) )
 
-      call set_bundle_scalar(0.0_r_def,rhs_phys, bundle_size)
-      call invoke(name="update_rhs_phys_from_fast_physics",                           &
-                  matrix_vector_kernel_type(rhs_phys(igh_u) ,u_bl_inc_flux, mm_vel ), &
-                  enforce_bc_kernel_type(rhs_phys(igh_u))                             )
+        call set_bundle_scalar( 0.0_r_def,rhs_phys, bundle_size )
+        call invoke( name="update_rhs_phys_from_fast_physics",                            &
+                     matrix_vector_kernel_type( rhs_phys(igh_u), u_bl_inc_flux, mm_vel ), &
+                     enforce_bc_kernel_type( rhs_phys(igh_u) )                             )
 
-    end if ! l_boundary_layer
+      end if ! l_boundary_layer
 
       if (use_wavedynamics) then
 

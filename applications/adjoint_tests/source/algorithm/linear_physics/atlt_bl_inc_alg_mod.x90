@@ -32,6 +32,7 @@ module atlt_bl_inc_alg_mod
                                                   ls_md1_range,   &
                                                   ls_md2_range,   &
                                                   ls_md3_range
+  use timing_mod,                          only : start_timing, stop_timing, tik, LPROF
 
   implicit none
 
@@ -47,17 +48,16 @@ module atlt_bl_inc_alg_mod
   !> @param[in] mesh        Mesh object
   subroutine atlt_bl_inc_alg( mesh )
 
-    use tl_bl_inc_kernel_mod,  only : tl_bl_inc_kernel_type
-    use atl_bl_inc_kernel_mod, only : atl_bl_inc_kernel_type
-
-   use linear_config_mod,                  only: log_layer,            &
-                                                Blevs_m,              &
-                                                e_folding_levs_m,     &
-                                                u_land_m,             &
-                                                u_sea_m,              &
-                                                z_land_m,             &
-                                                z_sea_m,              &
-                                                L_0_m
+   use tl_bl_inc_kernel_mod,  only : tl_bl_inc_kernel_type
+   use atl_bl_inc_kernel_mod, only : atl_bl_inc_kernel_type
+   use linear_config_mod,     only : log_layer,            &
+                                     Blevs_m,              &
+                                     e_folding_levs_m,     &
+                                     u_land_m,             &
+                                     u_sea_m,              &
+                                     z_land_m,             &
+                                     z_sea_m,              &
+                                     L_0_m
 
     implicit none
 
@@ -94,6 +94,10 @@ module atlt_bl_inc_alg_mod
     real(kind=r_def)            :: relative_diff
     real(kind=r_def), parameter :: eps = 1e-30_r_def
 
+    integer(kind=tik) :: id
+
+    if ( LPROF ) call start_timing( id, 'atlt_bl_inc_alg' )
+
     vector_space_wtheta_ptr => function_space_collection % get_fs( mesh, element_order_h, element_order_v, Wtheta )
     vector_space_w2_ptr => function_space_collection % get_fs( mesh, element_order_h, element_order_v, W2 )
     vector_space_w3_ptr => function_space_collection % get_fs( mesh, element_order_h, element_order_v, W3 )
@@ -107,10 +111,8 @@ module atlt_bl_inc_alg_mod
     face_selector_ew => get_face_selector_ew(mesh%get_id())
     face_selector_ns => get_face_selector_ns(mesh%get_id())
 
-
     call u_inc % copy_field_properties( u_inc_input )
     call u % copy_field_properties( u_input )
-
 
     ! Initialise arguments and call the tangent-linear kernel.
     call invoke( setval_random( u ),                                     &
@@ -118,11 +120,9 @@ module atlt_bl_inc_alg_mod
                  setval_random( u_inc ),                                 &
                  setval_x( u_inc_input, u_inc ) )
 
-
     ! LS init
     call assign_field_random_range( auv, -1.0_r_def, 1.0_r_def )
     call assign_field_random_range( buv_inv, 1.0_r_def, 2.0_r_def ) ! must avoid 0
-
 
     ! < Mx, Mx >
     call invoke ( tl_bl_inc_kernel_type( u_inc,                &
@@ -131,10 +131,8 @@ module atlt_bl_inc_alg_mod
                                          face_selector_ew,     &
                                          face_selector_ns,     &
                                          Blevs_m ) )
-    call invoke (    &
-                 x_innerproduct_x( ip1(1), u_inc ),            &
-                 x_innerproduct_x( ip1(2), u ) )
-
+    call invoke ( x_innerproduct_x( ip1(1), u_inc ), &
+                  x_innerproduct_x( ip1(2), u ) )
 
     sf(1) = 1.0_r_def / (ip1(1) + eps)
     sf(2) = 1.0_r_def / (ip1(2) + eps)
@@ -143,35 +141,33 @@ module atlt_bl_inc_alg_mod
     inner1 = inner1 + ip1(1) * sf(1)
     inner1 = inner1 + ip1(2) * sf(2)
 
-
     ! Scaling fields
-    call invoke( inc_a_times_X( sf(1),u_inc ),                 &
-                 inc_a_times_X( sf(2),u ) )
+    call invoke( inc_a_times_X( sf(1), u_inc ), &
+                 inc_a_times_X( sf(2), u ) )
 
     ! < AMx, x >
-    call invoke ( atl_bl_inc_kernel_type( u_inc,               &
-                                         u,                    &
-                                         auv,buv_inv,          &
-                                         face_selector_ew,     &
-                                         face_selector_ns,     &
-                                         Blevs_m ) )
+    call invoke ( atl_bl_inc_kernel_type( u_inc,                &
+                                          u,                    &
+                                          auv,buv_inv,          &
+                                          face_selector_ew,     &
+                                          face_selector_ns,     &
+                                          Blevs_m ) )
 
-    call invoke (    &
-                 x_innerproduct_y( ip2(1), u_inc, u_inc_input ),         &
-                 x_innerproduct_y( ip2(2), u, u_input ) )
+    call invoke ( x_innerproduct_y( ip2(1), u_inc, u_inc_input ), &
+                  x_innerproduct_y( ip2(2), u, u_input ) )
 
     inner2 = 0.0_r_def
     inner2 = inner2 + ip2(1)
     inner2 = inner2 + ip2(2)
 
-      write(log_scratch_space,'(a,1x,2(e16.9,1x))') 'atlt_bl_inc_alg: ad test for atl_bl_inc_kernel_type: ip1=', &
-      ip1(1)*sf(1),ip1(2)*sf(2)
-      call log_event(log_scratch_space, LOG_LEVEL_DEBUG)
-      write(log_scratch_space,'(a,1x,2(e16.9,1x))') 'atlt_bl_inc_alg: ad test for atl_bl_inc_kernel_type: ip2=',ip2
-      call log_event(log_scratch_space, LOG_LEVEL_DEBUG)
-      write(log_scratch_space,'(a,1x,2(e16.9,1x))') 'atlt_bl_inc_alg: ad test for atl_bl_inc_kernel_type: s(ip1),s(ip2)=', &
-      inner1,inner2
-      call log_event(log_scratch_space, LOG_LEVEL_DEBUG)
+    write( log_scratch_space, * ) 'atlt_bl_inc_alg: ad test for atl_bl_inc_kernel_type: ip1=', &
+      ip1(1) * sf(1), ip1(2) * sf(2)
+    call log_event( log_scratch_space, LOG_LEVEL_DEBUG )
+    write( log_scratch_space, * ) 'atlt_bl_inc_alg: ad test for atl_bl_inc_kernel_type: ip2=', ip2
+    call log_event( log_scratch_space, LOG_LEVEL_DEBUG )
+    write( log_scratch_space, * ) 'atlt_bl_inc_alg: ad test for atl_bl_inc_kernel_type: s(ip1),s(ip2)=', &
+      inner1, inner2
+    call log_event( log_scratch_space, LOG_LEVEL_DEBUG )
 
     ! Test the inner-product values for equality, allowing for the precision of the active variables
     machine_tol = spacing( max( abs(inner1), abs(inner2) ) )
@@ -183,6 +179,8 @@ module atlt_bl_inc_alg_mod
       write(log_scratch_space, *) "FAILED tl_bl_inc:", inner1, inner2, relative_diff
       call log_event(log_scratch_space, LOG_LEVEL_ERROR)
     end if
+
+    if ( LPROF ) call stop_timing( id, 'atlt_bl_inc_alg' )
 
   end subroutine atlt_bl_inc_alg
 
