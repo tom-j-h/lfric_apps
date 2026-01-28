@@ -45,3 +45,20 @@ class vn30_t99(MacroUpgrade):
         self.add_setting(config, ["namelist:physics", "conv_gr_segment"], "16")
 
         return config, self.reports
+
+
+class vn30_t132(MacroUpgrade):
+    """Upgrade macro for ticket #132 by Tom Hill."""
+
+    BEFORE_TAG = "vn3.0_t99"
+    AFTER_TAG = "vn3.0_t132"
+
+    def upgrade(self, config, meta_config=None):
+        # Commands From: rose-meta/jedi_common
+        self.add_setting(
+            config,
+            ["namelist:jedi_lfric_settings", "adjoint_test_tolerance"],
+            "1.0e-4",
+        )
+
+        return config, self.reports
