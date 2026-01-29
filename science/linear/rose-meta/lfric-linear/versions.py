@@ -54,13 +54,19 @@ class vn30_t182(MacroUpgrade):
 
     def upgrade(self, config, meta_config=None):
         """Add linear boundary layer physics scheme"""
-        self.add_setting(config, ["namelist:linear", "Blevs_m"], "15")
-        self.add_setting(config, ["namelist:linear", "e_folding_levs_m"], "10")
-        self.add_setting(config, ["namelist:linear", "l_0_m"], "80.0")
-        self.add_setting(config, ["namelist:linear", "l_boundary_layer"], ".true.")
-        self.add_setting(config, ["namelist:linear", "log_layer"], "2")
-        self.add_setting(config, ["namelist:linear", "u_land_m"], "0.4")
-        self.add_setting(config, ["namelist:linear", "u_sea_m"], "0.4")
-        self.add_setting(config, ["namelist:linear", "z_land_m"], "0.05")
-        self.add_setting(config, ["namelist:linear", "z_sea_m"], "0.0005")
+        scaling = self.get_setting_value(
+            config, ["namelist:planet", "scaling_factor"]
+        )
+        if "125.0" in scaling:
+            self.add_setting(config, ["namelist:linear_physics", "l_boundary_layer"], ".false.")
+        else:
+            self.add_setting(config, ["namelist:linear_physics", "l_boundary_layer"], ".true.")
+            self.add_setting(config, ["namelist:linear_physics", "Blevs_m"], "15")
+            self.add_setting(config, ["namelist:linear_physics", "e_folding_levs_m"], "10")
+            self.add_setting(config, ["namelist:linear_physics", "l_0_m"], "80.0")
+            self.add_setting(config, ["namelist:linear_physics", "log_layer"], "2")
+            self.add_setting(config, ["namelist:linear_physics", "u_land_m"], "0.4")
+            self.add_setting(config, ["namelist:linear_physics", "u_sea_m"], "0.4")
+            self.add_setting(config, ["namelist:linear_physics", "z_land_m"], "0.05")
+            self.add_setting(config, ["namelist:linear_physics", "z_sea_m"], "0.0005")
         return config, self.reports
