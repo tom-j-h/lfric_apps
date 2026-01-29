@@ -48,16 +48,16 @@ module atlt_bl_inc_alg_mod
   !> @param[in] mesh        Mesh object
   subroutine atlt_bl_inc_alg( mesh )
 
-   use tl_bl_inc_kernel_mod,  only : tl_bl_inc_kernel_type
-   use atl_bl_inc_kernel_mod, only : atl_bl_inc_kernel_type
-   use linear_config_mod,     only : log_layer,            &
-                                     Blevs_m,              &
-                                     e_folding_levs_m,     &
-                                     u_land_m,             &
-                                     u_sea_m,              &
-                                     z_land_m,             &
-                                     z_sea_m,              &
-                                     L_0_m
+   use tl_bl_inc_kernel_mod,      only : tl_bl_inc_kernel_type
+   use atl_bl_inc_kernel_mod,     only : atl_bl_inc_kernel_type
+   use linear_physics_config_mod, only : log_layer,            &
+                                         Blevs_m,              &
+                                         e_folding_levs_m,     &
+                                         u_land_m,             &
+                                         u_sea_m,              &
+                                         z_land_m,             &
+                                         z_sea_m,              &
+                                         L_0_m
 
     implicit none
 

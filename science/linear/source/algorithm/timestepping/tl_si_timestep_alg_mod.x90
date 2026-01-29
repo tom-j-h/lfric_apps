@@ -29,8 +29,8 @@ module tl_si_timestep_alg_mod
   use linear_config_mod,           only: fixed_ls,                 &
                                          l_stabilise_bl,           &
                                          n_bl_levels_to_stabilise, &
-                                         max_bl_stabilisation,     &
-                                         l_boundary_layer
+                                         max_bl_stabilisation
+  use linear_physics_config_mod,   only: l_boundary_layer
   use mixed_solver_config_mod,     only: guess_np1,                            &
                                          reference_reset_time
   use timestepping_config_mod,     only: alpha,                                &

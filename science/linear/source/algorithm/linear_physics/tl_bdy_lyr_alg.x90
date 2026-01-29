@@ -15,7 +15,7 @@ module tl_bdy_lyr_alg_mod
                                                  get_face_selector_ns
   use sci_fem_constants_mod,               only: get_rmultiplicity_fe
   use field_mod,                           only: field_type
-  use linear_config_mod,                   only: log_layer,        &
+  use linear_physics_config_mod,           only: log_layer,        &
                                                  Blevs_m,          &
                                                  e_folding_levs_m, &
                                                  u_land_m,         &

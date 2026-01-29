@@ -23,8 +23,8 @@ module atl_si_timestep_alg_mod
   use linear_config_mod,                   only: fixed_ls,                 &
                                                  l_stabilise_bl,           &
                                                  n_bl_levels_to_stabilise, &
-                                                 max_bl_stabilisation,     &
-                                                 l_boundary_layer
+                                                 max_bl_stabilisation
+  use linear_physics_config_mod,           only: l_boundary_layer
   use derived_config_mod,                  only: bundle_size
   use boundaries_config_mod,               only: limited_area
   use sci_fem_constants_mod,               only: get_mass_matrix_fe, get_qr_fe
