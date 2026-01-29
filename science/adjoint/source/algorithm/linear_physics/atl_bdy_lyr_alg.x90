@@ -46,6 +46,7 @@ contains
 !>          3. Call atl_bl_inc_kernel_type: (adjoint of) from state(igh_u) use coefficients Auv, Buv_inv to compute u_bl_inc
 !>          The TLM BL scheme is described in Var Scientific Documentation Paper 55,
 !>          https://wwwspice/~frva/VAR/view/var-2025.03.0/doc/VSDP55_1A.pdf
+!>          The original code is at https://wwwspice/~frva/VAR/view/var-2022.12.2/doc/PF_bdy_lyr.html
 !> @param[in,out] modeldb                Structure containing the model state
 !> @param[in,out] u_bl_inc               TLM boundary layer increment
 !> @param[in,out] u                      The current TL model prognostic u field, state(igh_u)
