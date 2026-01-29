@@ -185,7 +185,7 @@ subroutine set_trajectory( self, jedi_state )
 
   ! Create field collection that contains the linear state fields
   ! without "ls_" prepended.
-  call create_linear_fields(jedi_state%geometry%get_mesh(), next_linear_state)
+  call create_linear_fields(jedi_state%geometry%get_mesh(), jedi_state%geometry%get_twod_mesh(), next_linear_state)
 
   ! Copy data from the input state into next_linear_state
   call jedi_state%get_to_field_collection( ls_variable_names, &

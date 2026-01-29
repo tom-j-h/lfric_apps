@@ -21,7 +21,7 @@
 !>               ii) all three "moist_dyn" fields.
 !>
 module jedi_lfric_linear_fields_mod
-  use constants_mod,                 only : i_def, str_def, r_def
+  use constants_mod,                 only : i_def, str_def, r_def, l_def
   use field_mod,                     only : field_type
   use field_collection_mod,          only : field_collection_type
   use fs_continuity_mod,             only : W3, Wtheta, W2
@@ -84,6 +84,19 @@ module jedi_lfric_linear_fields_mod
                                                                 Wtheta, &
                                                                 W3/)
 
+  logical( kind=l_def ), parameter, public :: &
+                                ls_variable_is_2d(ls_nvars) = (/.false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .false., &
+                                                                .true./)
+
   public :: create_linear_fields
 
 !-------------------------------------------------------------------------------
@@ -94,17 +107,20 @@ contains
 !> @brief    Create a field collection that includes the linear model variables
 !>
 !> @param [in]  mesh           Pointer to a mesh object
+!> @param [in]  twod_mesh      Pointer to a 2D mesh object
 !> @param [out] linear_fields  A field collection that includes the linear
 !>                             fields
-subroutine create_linear_fields( mesh, linear_fields )
+subroutine create_linear_fields( mesh, twod_mesh, linear_fields )
 
   implicit none
 
   type( mesh_type ), pointer,     intent(in) :: mesh
+  type( mesh_type ), pointer,     intent(in) :: twod_mesh
   type( field_collection_type ), intent(out) :: linear_fields
 
   ! Local
   type( field_type )              :: field
+  type( mesh_type ), pointer      :: mesh_for_field
   character( len=str_def )        :: variable_name
   integer                         :: i
 
@@ -116,8 +132,14 @@ subroutine create_linear_fields( mesh, linear_fields )
 
     variable_name = trim(ls_variable_names(i))
 
+    if (ls_variable_is_2d(i)) then
+      mesh_for_field => twod_mesh
+    else
+      mesh_for_field => mesh
+    end if
+
     call field%initialise( &
-           vector_space = function_space_collection%get_fs(mesh,               &
+           vector_space = function_space_collection%get_fs(mesh_for_field,     &
                                                            element_order_h,    &
                                                            element_order_v,    &
                                                            ls_variable_function_spaces(i)), &

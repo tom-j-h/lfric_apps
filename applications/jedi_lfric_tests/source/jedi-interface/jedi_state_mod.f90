@@ -382,7 +382,6 @@ subroutine setup_interface_to_modeldb( self )
   real(real64),     pointer :: atlas_data_ptr(:,:)
   integer(i_def),   pointer :: horizontal_map_ptr(:)
   integer(i_def)            :: n_variables
-  logical(l_def)            :: is_2d
 
   type( field_collection_type ), pointer :: depository
 
@@ -407,11 +406,9 @@ subroutine setup_interface_to_modeldb( self )
 
     atlas_data_ptr => self%fields(ivar)%get_data()
 
-    is_2d = self%field_meta_data%get_variable_is_2d(ivar)
-
     call self%fields_to_modeldb(ivar)%initialise( atlas_data_ptr,     &
                                                   horizontal_map_ptr, &
-                                                  lfric_field_ptr, is_2d=is_2d )
+                                                  lfric_field_ptr )
 
   end do
 
@@ -469,7 +466,6 @@ subroutine setup_interface_to_field_collection( self,             &
   integer(i_def),   pointer :: horizontal_map_ptr(:)
   integer(i_def)            :: n_variables
   logical                   :: all_variables_exists
-  logical(l_def)            :: is_2d
 
   ! Check that the state contains all the required fields
   all_variables_exists = &
@@ -489,10 +485,9 @@ subroutine setup_interface_to_field_collection( self,             &
     call get_model_field( variable_names(ivar), &
                           field_collection, lfric_field_ptr )
     call self%get_field_data(variable_names(ivar), atlas_data_ptr)
-    is_2d = self%field_meta_data%get_variable_is_2d(ivar)
     call interface_fields(ivar)%initialise( atlas_data_ptr,     &
                                             horizontal_map_ptr, &
-                                            lfric_field_ptr, is_2d=is_2d )
+                                            lfric_field_ptr )
   end do
 
 end subroutine setup_interface_to_field_collection
