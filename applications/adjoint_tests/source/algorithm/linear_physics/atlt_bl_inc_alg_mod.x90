@@ -123,10 +123,11 @@ module atlt_bl_inc_alg_mod
                  setval_x( u_inc_input, u_inc ) )
 
     ! LS init
-    call assign_field_random_range( auv, -1.0_r_def, 1.0_r_def )
-    call invoke( sign_X( auv_sign, 1.0_r_def, auv ) )
-    call assign_field_random_range( auv, 0.01_r_def, 1.0_r_def )
-    call invoke( inc_X_times_Y( auv, auv_sign ) ) ! avoids small values
+    ! Avoid very small values in auv and avoid zeroes in buv_inv
+    call assign_field_random_range( auv, -1.0_r_def, 1.0_r_def ) ! get positive and negative values
+    call invoke( sign_X( auv_sign, 1.0_r_def, auv ) ) ! extract sign of each value
+    call assign_field_random_range( auv, 1.0e-2_r_def, 1.0_r_def ) ! replace with values between 1.0e-2 and 1.0
+    call invoke( inc_X_times_Y( auv, auv_sign ) ) ! make some values negative
     call assign_field_random_range( buv_inv, 1.0_r_def, 2.0_r_def ) ! must avoid 0
 
     ! < Mx, Mx >
